@@ -47,43 +47,43 @@ const App: React.FC = () => {
     
     // Set other colors based on theme
     if (isDark) {
-        root.style.setProperty('--background', '0 0% 3.9%');
-        root.style.setProperty('--foreground', '0 0% 98%');
-        root.style.setProperty('--card', '0 0% 3.9%');
+        root.style.setProperty('--background', '0 0% 7%'); // #121212
+        root.style.setProperty('--foreground', '0 0% 98%'); // #fafafa
+        root.style.setProperty('--card', '0 0% 11%'); // #1c1c1c
         root.style.setProperty('--card-foreground', '0 0% 98%');
-        root.style.setProperty('--popover', '0 0% 3.9%');
+        root.style.setProperty('--popover', '0 0% 11%');
         root.style.setProperty('--popover-foreground', '0 0% 98%');
         root.style.setProperty('--primary', '0 0% 98%');
         root.style.setProperty('--primary-foreground', '0 0% 9%');
-        root.style.setProperty('--secondary', '0 0% 14.9%');
+        root.style.setProperty('--secondary', '0 0% 11%');
         root.style.setProperty('--secondary-foreground', '0 0% 98%');
-        root.style.setProperty('--muted', '0 0% 14.9%');
-        root.style.setProperty('--muted-foreground', '0 0% 63.9%');
-        root.style.setProperty('--accent-foreground', '0 0% 98%');
+        root.style.setProperty('--muted', '0 0% 15%'); // #262626
+        root.style.setProperty('--muted-foreground', '0 0% 63.9%'); // #a3a3a3
+        root.style.setProperty('--accent-foreground', '0 0% 9%'); // Black for on-accent text
         root.style.setProperty('--destructive', '0 62.8% 30.6%');
         root.style.setProperty('--destructive-foreground', '0 0% 98%');
-        root.style.setProperty('--border', '0 0% 14.9%');
-        root.style.setProperty('--input', '0 0% 14.9%');
+        root.style.setProperty('--border', '0 0% 20%'); // #333333
+        root.style.setProperty('--input', '0 0% 15%');
         root.style.setProperty('--ring', '0 0% 83.1%');
     } else {
-        root.style.setProperty('--background', '0 0% 100%');
-        root.style.setProperty('--foreground', '0 0% 3.9%');
-        root.style.setProperty('--card', '0 0% 100%');
-        root.style.setProperty('--card-foreground', '0 0% 3.9%');
+        root.style.setProperty('--background', '0 0% 96.1%'); // #f5f5f5
+        root.style.setProperty('--foreground', '0 0% 9%');
+        root.style.setProperty('--card', '0 0% 100%'); // #ffffff
+        root.style.setProperty('--card-foreground', '0 0% 9%');
         root.style.setProperty('--popover', '0 0% 100%');
-        root.style.setProperty('--popover-foreground', '0 0% 3.9%');
+        root.style.setProperty('--popover-foreground', '0 0% 9%');
         root.style.setProperty('--primary', '0 0% 9%');
         root.style.setProperty('--primary-foreground', '0 0% 98%');
-        root.style.setProperty('--secondary', '0 0% 96.1%');
+        root.style.setProperty('--secondary', '0 0% 98%'); // #fafafa
         root.style.setProperty('--secondary-foreground', '0 0% 9%');
-        root.style.setProperty('--muted', '0 0% 96.1%');
+        root.style.setProperty('--muted', '0 0% 94%'); // #f0f0f0
         root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-        root.style.setProperty('--accent-foreground', '0 0% 98%');
+        root.style.setProperty('--accent-foreground', '0 0% 98%'); // White for on-accent text
         root.style.setProperty('--destructive', '0 84.2% 60.2%');
         root.style.setProperty('--destructive-foreground', '0 0% 98%');
         root.style.setProperty('--border', '0 0% 89.8%');
-        root.style.setProperty('--input', '0 0% 89.8%');
-        root.style.setProperty('--ring', '0 0% 3.9%');
+        root.style.setProperty('--input', '0 0% 93%'); // #ededed
+        root.style.setProperty('--ring', '0 0% 9%');
     }
 
   }, [theme, accentColor]);
@@ -141,7 +141,7 @@ const App: React.FC = () => {
         setIsSidebarOpen={setIsSidebarOpen}
       />
       <main className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex lg:hidden items-center justify-between p-4 border-b border-border h-16">
+        <header className="flex lg:hidden items-center justify-between p-4 border-b border-border h-16 flex-shrink-0">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-full hover:bg-muted">
             <MenuIcon className="w-6 h-6" />
           </button>

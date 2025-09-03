@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Note, Task, KanbanStatus } from '../types';
 import { scheduleTaskWithAI } from '../services/geminiService';
+import { NotesIcon, CheckSquareIcon, PartyPopperIcon } from './icons';
 
 interface DashboardProps {
   notes: Note[];
@@ -9,10 +10,10 @@ interface DashboardProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const StatCard: React.FC<{ title: string; value: number | string, icon: string }> = ({ title, value, icon }) => (
-    <div className="bg-card border border-border p-6 rounded-lg shadow-sm flex items-center space-x-4">
-        <div className="bg-muted text-muted-foreground p-3 rounded-lg">
-            <span className="text-2xl">{icon}</span>
+const StatCard: React.FC<{ title: string; value: number | string, icon: React.ReactNode, iconBgColor: string }> = ({ title, value, icon, iconBgColor }) => (
+    <div className="bg-card border border-border p-5 rounded-lg shadow-sm flex items-center space-x-4">
+        <div className={`w-12 h-12 flex-shrink-0 rounded-lg flex items-center justify-center ${iconBgColor}`}>
+            {icon}
         </div>
         <div>
             <p className="text-sm text-muted-foreground">{title}</p>
@@ -65,9 +66,9 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks }) => {
       <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard title="Total Notes" value={notes.length} icon="📝" />
-        <StatCard title="Total Tasks" value={tasks.length} icon="✅" />
-        <StatCard title="Completed Tasks" value={completedTasks} icon="🎉" />
+        <StatCard title="Total Notes" value={notes.length} icon={<NotesIcon className="w-6 h-6 text-orange-900"/>} iconBgColor="bg-orange-200" />
+        <StatCard title="Total Tasks" value={tasks.length} icon={<CheckSquareIcon className="w-6 h-6 text-green-900"/>} iconBgColor="bg-green-200" />
+        <StatCard title="Completed Tasks" value={completedTasks} icon={<PartyPopperIcon className="w-6 h-6 text-indigo-900"/>} iconBgColor="bg-indigo-200" />
       </div>
 
       <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
@@ -78,9 +79,9 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks }) => {
             value={aiPrompt}
             onChange={(e) => setAiPrompt(e.target.value)}
             placeholder="e.g., Remind me to call John tomorrow at 2 pm"
-            className="flex-grow p-3 px-4 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring focus:outline-none"
+            className="flex-grow p-3 px-4 bg-input text-foreground border border-border rounded-md focus:ring-2 focus:ring-ring focus:outline-none"
           />
-          <button onClick={handleSchedule} disabled={isScheduling} className="px-8 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          <button onClick={handleSchedule} disabled={isScheduling} className="px-8 py-3 bg-foreground text-background font-semibold rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
             {isScheduling ? 'Scheduling...' : 'Schedule'}
           </button>
         </div>

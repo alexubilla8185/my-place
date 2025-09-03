@@ -128,3 +128,11 @@ export const HapticIcon = ({ className }: { className?: string }) => (
 export const LanguageIcon = ({ className }: { className?: string }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.87 15.07-10 12.87-12.87 15.07 10 12.87zM11.93 3.34c-4.48 0-8.15 3.66-8.15 8.15s3.67 8.15 8.15 8.15c4.48 0 8.15-3.66 8.15-8.15S16.41 3.34 11.93 3.34zm.24 14.93c-3.68 0-6.68-2.99-6.68-6.68s2.99-6.68 6.68-6.68c3.68 0 6.68 2.99 6.68 6.68s-2.99 6.68-6.68 6.68z"/></svg>
 );
+
+export const PartyPopperIcon = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m18 4-2 2h-4l-2-2-4 4-2 2 4 4-2 2 4 4 2-2 2-2-2-2 4-4 2-2-4-4zm-2 10-2 2-4-4 2-2 4 4z"/></svg>
+);
+
+export const CheckSquareIcon = ({ className }: { className?: string }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-9 14-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+);
