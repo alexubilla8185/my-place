@@ -1,18 +1,21 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  // In a real app, you'd want to handle this more gracefully.
-  // For this environment, we assume it's set.
-  console.warn("API_KEY environment variable not set. AI features will not work.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
+// Helper function to get the AI client instance on-demand
+const getAiClient = () => {
+  const API_KEY = process.env.API_KEY;
+  if (!API_KEY) {
+    console.warn("API_KEY environment variable not set. AI features will not work.");
+    return null;
+  }
+  return new GoogleGenAI({ apiKey: API_KEY });
+};
 
 export const summarizeText = async (text: string): Promise<string> => {
-  if (!API_KEY) return "AI features are disabled. Please configure your API key.";
+  const ai = getAiClient();
+  if (!ai) {
+    return "AI features are disabled. Please configure your API key.";
+  }
+  
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -26,10 +29,12 @@ export const summarizeText = async (text: string): Promise<string> => {
 };
 
 export const scheduleTaskWithAI = async (prompt: string): Promise<{ task: string; dueDate: string } | null> => {
-    if (!API_KEY) {
+    const ai = getAiClient();
+    if (!ai) {
         alert("AI features are disabled. Please configure your API key.");
         return null;
     }
+
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -63,11 +68,14 @@ export const scheduleTaskWithAI = async (prompt: string): Promise<{ task: string
     }
 };
 
-
 export const transcribeAudio = async (audioUrl: string): Promise<string> => {
-  if (!API_KEY) return "AI features are disabled.";
+  const ai = getAiClient();
+  if (!ai) {
+    return "AI features are disabled.";
+  }
+  
   // Note: Gemini API does not directly support audio file transcription via this SDK yet.
-  // This is a placeholder for future implementation.
+  // This is a placeholder for a future implementation.
   console.log("Attempting to transcribe:", audioUrl);
   return new Promise((resolve) => {
     setTimeout(() => {
