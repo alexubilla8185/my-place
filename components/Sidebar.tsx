@@ -1,6 +1,6 @@
 import React from 'react';
-import { Page, Theme } from '../types';
-import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, DocsIcon, CalendarIcon, PlusIcon, SettingsIcon, SearchIcon, CloseIcon } from './icons';
+import { Page } from '../types';
+import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon } from './icons';
 
 interface SidebarProps {
   activePage: Page;
@@ -15,8 +15,6 @@ const navItems = [
   { page: Page.Notes, icon: <NotesIcon className="w-6 h-6" /> },
   { page: Page.VoiceRecorder, icon: <VoiceRecorderIcon className="w-6 h-6" /> },
   { page: Page.Kanban, icon: <KanbanIcon className="w-6 h-6" /> },
-  { page: Page.Documentation, icon: <DocsIcon className="w-6 h-6" /> },
-  { page: Page.Calendar, icon: <CalendarIcon className="w-6 h-6" /> },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchClick, isSidebarOpen, setIsSidebarOpen }) => {
@@ -24,44 +22,50 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchCl
     <li>
         <button
           onClick={() => {
-            setActivePage(page)
-            setIsSidebarOpen(false)
+            setActivePage(page);
+            setIsSidebarOpen(false);
           }}
-          className={`flex items-center w-full h-14 px-3 transition-colors rounded-lg ${
+          className={`flex items-center w-full p-4 transition-all duration-200 rounded-xl text-md font-medium ${
             activePage === page
-              ? 'text-accent font-semibold bg-accent/10'
+              ? 'bg-accent text-accent-foreground shadow-md'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted'
           }`}
         >
-          <div className="w-12 flex justify-center">{icon}</div>
-          <span className="ml-0">{page}</span>
+          {icon}
+          <span className="ml-4">{page}</span>
         </button>
     </li>
   );
 
   return (
     <>
-      <aside className={`fixed lg:relative z-40 lg:z-auto w-80 h-full bg-background flex-col flex-shrink-0 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      {/* Mobile overlay */}
+      {isSidebarOpen && <div onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 z-30 bg-black/60 lg:hidden backdrop-blur-sm"></div>}
+
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 lg:relative z-40 w-72 h-full bg-background flex-col flex-shrink-0 transition-transform duration-300 ease-in-out transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 border-r border-border`}>
         <div className="flex flex-col h-full p-4">
           <div className="flex items-center h-20 px-2">
              <div className="flex items-center">
               <div className="w-10 h-10 bg-primary text-primary-foreground rounded-lg flex items-center justify-center font-bold text-2xl">M</div>
               <span className="ml-4 text-2xl font-bold text-foreground">My Place</span>
             </div>
-            <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-muted-foreground ml-auto">
+            <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-muted-foreground ml-auto p-2 rounded-full hover:bg-muted">
               <CloseIcon className="w-6 h-6"/>
             </button>
           </div>
           
-          <div className="px-2">
-            <button onClick={() => { onSearchClick(); setIsSidebarOpen(false); }} className="flex items-center w-full h-12 px-4 text-left text-muted-foreground bg-secondary hover:bg-muted rounded-lg border border-border transition-colors">
+          <div className="px-2 mb-4">
+            <button 
+              onClick={() => { onSearchClick(); setIsSidebarOpen(false); }} 
+              className="flex items-center w-full p-4 text-left text-muted-foreground bg-secondary hover:bg-muted rounded-xl border border-transparent hover:border-border transition-colors duration-200"
+            >
                 <SearchIcon className="w-5 h-5" />
                 <span className="ml-4">Search...</span>
             </button>
           </div>
 
-
-          <nav className="flex-1 mt-6 px-2">
+          <nav className="flex-1 px-2">
             <ul className="space-y-2">
                 {navItems.map(item => (
                 <NavButton key={item.page} page={item.page} icon={item.icon} />
@@ -69,15 +73,26 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchCl
             </ul>
           </nav>
           
-          <div className="mt-auto px-2">
-            <ul className="space-y-2">
-                <NavButton page={Page.Upgrade} icon={<PlusIcon className="w-6 h-6" />} />
-                <NavButton page={Page.Settings} icon={<SettingsIcon className="w-6 h-6" />} />
-            </ul>
+          <div className="mt-auto flex items-center justify-center space-x-4 p-4 border-t border-border">
+              <div className="relative group">
+                  <button onClick={() => { setActivePage(Page.HowItWorks); setIsSidebarOpen(false); }} className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors" aria-label="How it works">
+                      <QuestionMarkIcon className="w-6 h-6" />
+                  </button>
+                  <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max px-3 py-1.5 bg-foreground text-background text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+                      How it works
+                  </span>
+              </div>
+              <div className="relative group">
+                  <button onClick={() => { setActivePage(Page.Settings); setIsSidebarOpen(false); }} className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors" aria-label="Settings">
+                      <SettingsIcon className="w-6 h-6" />
+                  </button>
+                  <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max px-3 py-1.5 bg-foreground text-background text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+                      Settings
+                  </span>
+              </div>
           </div>
         </div>
       </aside>
-      {isSidebarOpen && <div onClick={() => setIsSidebarOpen(false)} className="fixed inset-0 z-30 bg-black/60 lg:hidden"></div>}
     </>
   );
 };

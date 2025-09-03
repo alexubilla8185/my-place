@@ -10,7 +10,6 @@ import Dashboard from './components/Dashboard';
 import NotesPage from './components/Notes';
 import KanbanBoard from './components/KanbanBoard';
 import VoiceRecorder from './components/VoiceRecorder';
-import CalendarPage from './components/CalendarPage';
 import Settings from './components/Settings';
 import Upgrade from './components/Upgrade';
 import Documentation from './components/Documentation';
@@ -102,15 +101,13 @@ const App: React.FC = () => {
         return <KanbanBoard tasks={tasks} setTasks={setTasks} />;
       case Page.VoiceRecorder:
         return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} />;
-      case Page.Calendar:
-        return <CalendarPage notes={notes} />;
       case Page.Settings:
         return <Settings setActivePage={setActivePage} />;
       case Page.Personalization:
         return <Personalization theme={theme} setTheme={setTheme} accentColor={accentColor} setAccentColor={setAccentColor} setActivePage={setActivePage} />;
       case Page.Upgrade:
           return <Upgrade />;
-      case Page.Documentation:
+      case Page.HowItWorks:
           return <Documentation />;
       default:
         return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;

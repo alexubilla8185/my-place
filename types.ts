@@ -4,8 +4,7 @@ export enum Page {
   Notes = 'Notes',
   VoiceRecorder = 'Voice Recorder',
   Kanban = 'Kanban Board',
-  Documentation = 'Documentation',
-  Calendar = 'Calendar',
+  HowItWorks = 'How it works',
   Upgrade = 'Upgrade to Plus',
   Settings = 'Settings',
   Personalization = 'Personalization',
@@ -41,7 +40,7 @@ export interface Note {
 }
 
 export interface Task {
-  id: string;
+  id:string;
   content: string;
   status: KanbanStatus;
 }

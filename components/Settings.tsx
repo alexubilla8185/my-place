@@ -13,7 +13,7 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
         { icon: <DataIcon className="w-6 h-6"/>, label: 'Data Controls', page: Page.Dashboard }, // Placeholder
         { icon: <VoiceIcon className="w-6 h-6"/>, label: 'Voice', page: Page.Dashboard }, // Placeholder
         { icon: <SecurityIcon className="w-6 h-6"/>, label: 'Security', page: Page.Dashboard }, // Placeholder
-        { icon: <InfoIcon className="w-6 h-6"/>, label: 'About', page: Page.Documentation },
+        { icon: <InfoIcon className="w-6 h-6"/>, label: 'About', page: Page.HowItWorks },
     ];
 
   return (
