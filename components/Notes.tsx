@@ -84,7 +84,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes }) => {
       {!isFormVisible && (
         <button 
           onClick={() => { setNoteToEdit(null); setIsFormVisible(true); }}
-          className="fixed z-20 bottom-8 right-8 w-16 h-16 bg-accent text-accent-foreground rounded-full shadow-lg flex items-center justify-center transform hover:scale-105 transition-transform"
+          className="fixed z-20 bottom-6 right-6 sm:bottom-8 sm:right-8 w-16 h-16 bg-accent text-accent-foreground rounded-full shadow-lg flex items-center justify-center transform hover:scale-105 transition-transform"
           aria-label="New Note"
         >
           <AddIcon className="w-8 h-8"/>
@@ -93,14 +93,21 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {notes.map(note => (
-          <div key={note.id} className="bg-card p-5 rounded-lg border border-border flex flex-col">
+          <div key={note.id} className="bg-card p-6 rounded-lg border border-border flex flex-col">
             <h3 className="text-lg font-bold mb-2">{note.title}</h3>
-            <p className="flex-1 text-muted-foreground whitespace-pre-wrap">{note.content}</p>
-            {note.dueDate && <p className="text-xs mt-4 text-accent">Due: {new Date(note.dueDate).toLocaleDateString()}</p>}
-            <div className="flex justify-end items-center gap-2 mt-4 pt-4 border-t border-border">
-                <button onClick={() => handleSummarize(note.content)} className="text-sm font-semibold text-accent hover:bg-accent/10 px-3 py-2 rounded-md">Summarize</button>
-                <button onClick={() => { setNoteToEdit(note); setIsFormVisible(true); window.scrollTo(0,0); }} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
-                <button onClick={() => handleDeleteNote(note.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>
+            <p className="flex-1 text-muted-foreground whitespace-pre-wrap mb-4">{note.content}</p>
+            
+            <div className="mt-auto"> 
+              {note.dueDate && <p className="text-xs mb-4 text-accent">Due: {new Date(note.dueDate).toLocaleDateString()}</p>}
+              <div className="flex justify-between items-center gap-2 pt-4 border-t border-border">
+                  <button onClick={() => handleSummarize(note.content)} className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors">
+                    Summarize
+                  </button>
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => { setNoteToEdit(note); setIsFormVisible(true); window.scrollTo(0,0); }} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleDeleteNote(note.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>
+                  </div>
+              </div>
             </div>
           </div>
         ))}

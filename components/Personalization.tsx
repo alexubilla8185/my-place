@@ -53,16 +53,18 @@ const Personalization: React.FC<PersonalizationProps> = ({ theme, setTheme, acce
             </div>
 
              <div className="p-4 border-b border-border last:border-b-0">
-                <div className="flex items-center">
-                    <div className="text-muted-foreground"><PaletteIcon className="w-6 h-6"/></div>
-                    <div className="ml-4 flex-1">
-                        <h3 className="font-medium">Accent Color</h3>
-                        <p className="text-muted-foreground text-sm capitalize">{accentColor}</p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <div className="flex items-center w-full mb-3 sm:mb-0">
+                        <div className="text-muted-foreground"><PaletteIcon className="w-6 h-6"/></div>
+                        <div className="ml-4 flex-1">
+                            <h3 className="font-medium">Accent Color</h3>
+                            <p className="text-muted-foreground text-sm capitalize">{accentColor}</p>
+                        </div>
                     </div>
                      <div className="relative">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center flex-wrap gap-2">
                             {colorOptions.map(c => (
-                                <button key={c.name} onClick={() => handleAccentSelect(c.name)} className={`w-6 h-6 rounded-full ${c.color} flex items-center justify-center`}>
+                                <button key={c.name} onClick={() => handleAccentSelect(c.name)} className={`w-6 h-6 rounded-full ${c.color} flex items-center justify-center flex-shrink-0`}>
                                     {accentColor === c.name && <CheckIcon className="w-4 h-4 text-white"/>}
                                 </button>
                             ))}

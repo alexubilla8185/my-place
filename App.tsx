@@ -95,7 +95,7 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (activePage) {
       case Page.Dashboard:
-        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} />;
+        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;
       case Page.Notes:
         return <NotesPage notes={notes} setNotes={setNotes} />;
       case Page.Kanban:
@@ -113,7 +113,7 @@ const App: React.FC = () => {
       case Page.Documentation:
           return <Documentation />;
       default:
-        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} />;
+        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;
     }
   };
 

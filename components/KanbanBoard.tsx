@@ -57,7 +57,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks }) => {
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">Kanban Board</h1>
-            <form onSubmit={handleAddTask} className="flex gap-4">
+            <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-4">
                 <input
                     type="text"
                     value={newTaskContent}
@@ -65,7 +65,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks }) => {
                     placeholder="Add a new task..."
                     className="flex-grow p-3 px-4 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring focus:outline-none"
                 />
-                <button type="submit" className="px-6 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Add Task</button>
+                <button type="submit" className="px-6 py-3 sm:py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Add Task</button>
             </form>
 
             <div className="flex flex-col lg:flex-row gap-6 overflow-x-auto pb-4">

@@ -88,17 +88,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ recordings, setRecordings
         <h2 className="text-xl font-semibold">Past Recordings</h2>
         {recordings.length > 0 ? recordings.map(rec => (
           <div key={rec.id} className="p-4 bg-card border border-border rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-muted rounded-full">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4 w-full">
+                <div className="p-3 bg-muted rounded-full flex-shrink-0">
                     <VoiceRecorderIcon className="w-6 h-6 text-muted-foreground"/>
                 </div>
-                <div>
-                    <p className="font-semibold">{rec.name}</p>
+                <div className="truncate">
+                    <p className="font-semibold truncate">{rec.name}</p>
                     <p className="text-sm text-muted-foreground">{new Date(rec.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
                 <button onClick={() => playRecording(rec.audioUrl)} className="p-2 rounded-full hover:bg-muted"><PlayIcon className="w-5 h-5"/></button>
                 <button onClick={() => handleTranscribe(rec.id, rec.audioUrl)} disabled={transcribingId === rec.id} className="text-sm font-semibold text-accent hover:bg-accent/10 px-3 py-2 rounded-md disabled:opacity-50">
                     {transcribingId === rec.id ? '...' : 'Transcribe'}

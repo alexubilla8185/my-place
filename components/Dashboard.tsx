@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Note, Task, KanbanStatus } from '../types';
+import { Page, Note, Task, KanbanStatus } from '../types';
 import { scheduleTaskWithAI } from '../services/geminiService';
 import { NotesIcon, CheckSquareIcon, PartyPopperIcon } from './icons';
 
@@ -8,10 +8,11 @@ interface DashboardProps {
   tasks: Task[];
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setActivePage: (page: Page) => void;
 }
 
 const StatCard: React.FC<{ title: string; value: number | string, icon: React.ReactNode, iconBgColor: string }> = ({ title, value, icon, iconBgColor }) => (
-    <div className="bg-card border border-border p-5 rounded-lg shadow-sm flex items-center space-x-4">
+    <div className="bg-card border border-border p-5 rounded-lg shadow-sm flex items-center space-x-4 h-full">
         <div className={`w-12 h-12 flex-shrink-0 rounded-lg flex items-center justify-center ${iconBgColor}`}>
             {icon}
         </div>
@@ -22,7 +23,7 @@ const StatCard: React.FC<{ title: string; value: number | string, icon: React.Re
     </div>
 );
 
-const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks }) => {
+const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActivePage }) => {
   const [aiPrompt, setAiPrompt] = useState('');
   const [isScheduling, setIsScheduling] = useState(false);
 
@@ -66,8 +67,12 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks }) => {
       <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard title="Total Notes" value={notes.length} icon={<NotesIcon className="w-6 h-6 text-orange-900"/>} iconBgColor="bg-orange-200" />
-        <StatCard title="Total Tasks" value={tasks.length} icon={<CheckSquareIcon className="w-6 h-6 text-green-900"/>} iconBgColor="bg-green-200" />
+        <button onClick={() => setActivePage(Page.Notes)} className="w-full text-left transition-transform transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-lg">
+            <StatCard title="Total Notes" value={notes.length} icon={<NotesIcon className="w-6 h-6 text-orange-900"/>} iconBgColor="bg-orange-200" />
+        </button>
+         <button onClick={() => setActivePage(Page.Kanban)} className="w-full text-left transition-transform transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-lg">
+            <StatCard title="Total Tasks" value={tasks.length} icon={<CheckSquareIcon className="w-6 h-6 text-green-900"/>} iconBgColor="bg-green-200" />
+        </button>
         <StatCard title="Completed Tasks" value={completedTasks} icon={<PartyPopperIcon className="w-6 h-6 text-indigo-900"/>} iconBgColor="bg-indigo-200" />
       </div>
 
