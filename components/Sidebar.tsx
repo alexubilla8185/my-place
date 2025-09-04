@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchCl
             </button>
           </div>
           
-          <div className="px-2 mb-4">
+          <div className="px-2 mb-4 hidden lg:block">
             <button 
               onClick={() => { onSearchClick(); setIsSidebarOpen(false); }} 
               className="flex items-center w-full p-4 text-left text-muted-foreground bg-secondary hover:bg-muted rounded-xl border border-transparent hover:border-border transition-colors duration-200"

@@ -56,7 +56,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks }) => {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Kanban Board</h1>
+            <h1 className="hidden lg:block text-3xl font-bold">Kanban Board</h1>
             <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-4">
                 <input
                     type="text"

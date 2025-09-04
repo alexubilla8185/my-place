@@ -64,7 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActive
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+      <h1 className="hidden lg:block text-3xl font-bold text-foreground">Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <button onClick={() => setActivePage(Page.Notes)} className="w-full text-left transition-transform transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-lg">
