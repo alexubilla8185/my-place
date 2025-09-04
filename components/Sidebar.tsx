@@ -1,6 +1,7 @@
 import React from 'react';
 import { Page } from '../types';
 import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon, ProjectsIcon } from './icons';
+import Logo from './Logo';
 
 interface SidebarProps {
   activePage: Page;
@@ -47,10 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchCl
       <aside className={`fixed inset-y-0 left-0 lg:relative z-40 w-72 h-full bg-background flex-col flex-shrink-0 transition-transform duration-300 ease-in-out transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 border-r border-border`}>
         <div className="flex flex-col h-full p-4">
           <div className="flex items-center h-20 px-2">
-             <div className="flex items-center">
-              <div className="w-10 h-10 bg-primary text-primary-foreground rounded-lg flex items-center justify-center font-bold text-2xl">M</div>
-              <span className="ml-4 text-2xl font-bold text-foreground">My Place</span>
-            </div>
+             <Logo />
             <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-muted-foreground ml-auto p-2 rounded-full hover:bg-muted">
               <CloseIcon className="w-6 h-6"/>
             </button>
