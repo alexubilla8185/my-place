@@ -20,7 +20,7 @@ import ProjectsPage from './components/ProjectsPage';
 
 // HSL color definitions for each accent color
 const accentColorMap: Record<AccentColor, { h: number; s: number; l: number }> = {
-    [AccentColor.Default]: { h: 240, s: 6, l: 10 },
+    [AccentColor.Default]: { h: 221, s: 83, l: 53 }, // Use Blue as the default
     [AccentColor.Blue]: { h: 221, s: 83, l: 53 },
     [AccentColor.Green]: { h: 142, s: 76, l: 36 },
     [AccentColor.Yellow]: { h: 48, s: 96, l: 53 },
@@ -198,9 +198,9 @@ const AppContent: React.FC = () => {
             p('tertiary-container', 30); p('on-tertiary-container', 90);
 
             // Neutral / Surface colors
-            n('background', 6); n('on-background', 90);
-            n('surface', 6); n('on-surface', 90);
-            n('on-surface-variant', 70);
+            n('background', 10); n('on-background', 90);
+            n('surface', 10); n('on-surface', 90);
+            n('on-surface-variant', 80);
             n('surface-container-lowest', 4);
             n('surface-container-low', 10);
             n('surface-container', 12);
@@ -208,7 +208,7 @@ const AppContent: React.FC = () => {
             n('surface-container-highest', 22);
 
             // Outlines
-            n('outline', 50); n('outline-variant', 30);
+            n('outline', 60); n('outline-variant', 30);
             
             // Destructive
             root.style.setProperty('--destructive', '0 70% 50%');
