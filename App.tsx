@@ -18,13 +18,14 @@ import Documentation from './components/Documentation';
 import Personalization from './components/Personalization';
 import ProjectsPage from './components/ProjectsPage';
 
-const accentColorMap: Record<AccentColor, {light: string, dark: string}> = {
-    [AccentColor.Default]: { light: '240 5.9% 10%', dark: '0 0% 98%' },
-    [AccentColor.Blue]: { light: '221.2 83.2% 53.3%', dark: '217.2 91.2% 59.8%' },
-    [AccentColor.Green]: { light: '142.1 76.2% 36.3%', dark: '142.1 70.6% 45.3%' },
-    [AccentColor.Yellow]: { light: '47.9 95.8% 53.1%', dark: '47.9 95.8% 53.1%' },
-    [AccentColor.Pink]: { light: '333.3 80.4% 53.1%', dark: '333.3 80.4% 53.1%' },
-    [AccentColor.Orange]: { light: '24.6 95% 53.1%', dark: '24.6 95% 53.1%' },
+// HSL color definitions for each accent color
+const accentColorMap: Record<AccentColor, { h: number; s: number; l: number }> = {
+    [AccentColor.Default]: { h: 240, s: 6, l: 10 },
+    [AccentColor.Blue]: { h: 221, s: 83, l: 53 },
+    [AccentColor.Green]: { h: 142, s: 76, l: 36 },
+    [AccentColor.Yellow]: { h: 48, s: 96, l: 53 },
+    [AccentColor.Pink]: { h: 333, s: 80, l: 53 },
+    [AccentColor.Orange]: { h: 25, s: 95, l: 53 },
 };
 
 interface MainAppProps {
@@ -113,16 +114,16 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
         setIsSidebarOpen={setIsSidebarOpen}
       />
       <main className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex lg:hidden items-center justify-between p-4 border-b border-border h-16 flex-shrink-0">
-          <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-full hover:bg-muted">
+        <header className="flex lg:hidden items-center justify-between p-4 border-b border-outline-variant h-16 flex-shrink-0 bg-surface">
+          <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-full hover:bg-surface-container">
             <MenuIcon className="w-6 h-6" />
           </button>
           <span className="text-lg font-bold">{activePage}</span>
-          <button onClick={handleSearchClick} className="p-2 rounded-full hover:bg-muted">
+          <button onClick={handleSearchClick} className="p-2 rounded-full hover:bg-surface-container">
              <SearchIcon className="w-6 h-6" />
           </button>
         </header>
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-surface">
             {renderPage()}
         </div>
       </main>
@@ -134,18 +135,18 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
             placeholder="Type to search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 pl-12 bg-input text-foreground placeholder:text-muted-foreground border border-border rounded-lg focus:ring-2 focus:ring-ring focus:outline-none"
+            className="w-full p-3 pl-12 bg-input text-on-surface placeholder:text-on-surface-variant border border-outline rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           />
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
+          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-on-surface-variant" />
         </div>
         <div className="mt-4 space-y-4">
           {searchQuery && (
             <>
-              {filteredProjects.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Projects</h4><div className="space-y-2">{filteredProjects.map(p => <div key={p.id} className="p-3 bg-secondary rounded-md">{p.name}</div>)}</div></div>}
-              {filteredNotes.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Notes</h4><div className="space-y-2">{filteredNotes.map(n => <div key={n.id} className="p-3 bg-secondary rounded-md">{n.title}</div>)}</div></div>}
-              {filteredTasks.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Tasks</h4><div className="space-y-2">{filteredTasks.map(t => <div key={t.id} className="p-3 bg-secondary rounded-md">{t.content}</div>)}</div></div>}
-              {filteredRecordings.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Recordings</h4><div className="space-y-2">{filteredRecordings.map(r => <div key={r.id} className="p-3 bg-secondary rounded-md">{r.name}</div>)}</div></div>}
-              {filteredProjects.length === 0 && filteredNotes.length === 0 && filteredTasks.length === 0 && filteredRecordings.length === 0 && <p className="text-center text-muted-foreground py-4">No results found.</p>}
+              {filteredProjects.length > 0 && <div><h4 className="font-semibold mb-2 text-primary">Projects</h4><div className="space-y-2">{filteredProjects.map(p => <div key={p.id} className="p-3 bg-surface-container rounded-md">{p.name}</div>)}</div></div>}
+              {filteredNotes.length > 0 && <div><h4 className="font-semibold mb-2 text-primary">Notes</h4><div className="space-y-2">{filteredNotes.map(n => <div key={n.id} className="p-3 bg-surface-container rounded-md">{n.title}</div>)}</div></div>}
+              {filteredTasks.length > 0 && <div><h4 className="font-semibold mb-2 text-primary">Tasks</h4><div className="space-y-2">{filteredTasks.map(t => <div key={t.id} className="p-3 bg-surface-container rounded-md">{t.content}</div>)}</div></div>}
+              {filteredRecordings.length > 0 && <div><h4 className="font-semibold mb-2 text-primary">Recordings</h4><div className="space-y-2">{filteredRecordings.map(r => <div key={r.id} className="p-3 bg-surface-container rounded-md">{r.name}</div>)}</div></div>}
+              {filteredProjects.length === 0 && filteredNotes.length === 0 && filteredTasks.length === 0 && filteredRecordings.length === 0 && <p className="text-center text-on-surface-variant py-4">No results found.</p>}
             </>
           )}
         </div>
@@ -153,17 +154,17 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
 
       <Modal isOpen={isUpgradePromptVisible} onClose={() => setIsUpgradePromptVisible(false)} title="Plus Feature">
         <div className="text-center">
-            <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-accent/10 flex items-center justify-center">
-                 <PlusFeatureIcon className="w-8 h-8 text-accent"/>
+            <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-primary-container flex items-center justify-center">
+                 <PlusFeatureIcon className="w-8 h-8 text-on-primary-container"/>
             </div>
             <h3 className="text-xl font-bold mb-2">Unlock with My Place Plus</h3>
-            <p className="text-muted-foreground mb-6">This is a premium feature. Upgrade your plan to unlock powerful AI capabilities and boost your productivity.</p>
+            <p className="text-on-surface-variant mb-6">This is a premium feature. Upgrade your plan to unlock powerful AI capabilities and boost your productivity.</p>
             <button
                 onClick={() => {
                     setActivePage(Page.Upgrade);
                     setIsUpgradePromptVisible(false);
                 }}
-                className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-accent/90"
+                className="w-full px-6 py-3 bg-primary text-on-primary font-semibold rounded-md hover:opacity-90"
             >
                 Upgrade Now
             </button>
@@ -184,47 +185,60 @@ const AppContent: React.FC = () => {
         root.classList.toggle('dark', isDark);
 
         const accent = accentColorMap[accentColor] || accentColorMap.Default;
-        root.style.setProperty('--accent', isDark ? accent.dark : accent.light);
+        const p = (role, l) => root.style.setProperty(`--${role}`, `${accent.h} ${accent.s}% ${l}%`);
+        const n = (role, l) => root.style.setProperty(`--${role}`, `240 6% ${l}%`); // Neutral palette
         
-        // Set other colors based on theme
         if (isDark) {
-            root.style.setProperty('--background', '0 0% 7%'); // #121212
-            root.style.setProperty('--foreground', '0 0% 98%'); // #fafafa
-            root.style.setProperty('--card', '0 0% 11%'); // #1c1c1c
-            root.style.setProperty('--card-foreground', '0 0% 98%');
-            root.style.setProperty('--popover', '0 0% 11%');
-            root.style.setProperty('--popover-foreground', '0 0% 98%');
-            root.style.setProperty('--primary', '0 0% 98%');
-            root.style.setProperty('--primary-foreground', '0 0% 9%');
-            root.style.setProperty('--secondary', '0 0% 11%');
-            root.style.setProperty('--secondary-foreground', '0 0% 98%');
-            root.style.setProperty('--muted', '0 0% 15%'); // #262626
-            root.style.setProperty('--muted-foreground', '0 0% 63.9%'); // #a3a3a3
-            root.style.setProperty('--accent-foreground', '0 0% 9%'); // Black for on-accent text
-            root.style.setProperty('--destructive', '0 62.8% 30.6%');
-            root.style.setProperty('--destructive-foreground', '0 0% 98%');
-            root.style.setProperty('--border', '0 0% 20%'); // #333333
-            root.style.setProperty('--input', '0 0% 15%');
-            root.style.setProperty('--ring', '0 0% 83.1%');
+            // Accent colors
+            p('primary', 80); p('on-primary', 20);
+            p('primary-container', 30); p('on-primary-container', 90);
+            p('secondary', 80); p('on-secondary', 20);
+            p('secondary-container', 30); p('on-secondary-container', 90);
+            p('tertiary', 80); p('on-tertiary', 20);
+            p('tertiary-container', 30); p('on-tertiary-container', 90);
+
+            // Neutral / Surface colors
+            n('background', 6); n('on-background', 90);
+            n('surface', 6); n('on-surface', 90);
+            n('on-surface-variant', 70);
+            n('surface-container-lowest', 4);
+            n('surface-container-low', 10);
+            n('surface-container', 12);
+            n('surface-container-high', 17);
+            n('surface-container-highest', 22);
+
+            // Outlines
+            n('outline', 50); n('outline-variant', 30);
+            
+            // Destructive
+            root.style.setProperty('--destructive', '0 70% 50%');
+            root.style.setProperty('--on-destructive', '0 0% 10%');
+
         } else {
-            root.style.setProperty('--background', '0 0% 96.1%'); // #f5f5f5
-            root.style.setProperty('--foreground', '0 0% 9%');
-            root.style.setProperty('--card', '0 0% 100%'); // #ffffff
-            root.style.setProperty('--card-foreground', '0 0% 9%');
-            root.style.setProperty('--popover', '0 0% 100%');
-            root.style.setProperty('--popover-foreground', '0 0% 9%');
-            root.style.setProperty('--primary', '0 0% 9%');
-            root.style.setProperty('--primary-foreground', '0 0% 98%');
-            root.style.setProperty('--secondary', '0 0% 98%'); // #fafafa
-            root.style.setProperty('--secondary-foreground', '0 0% 9%');
-            root.style.setProperty('--muted', '0 0% 94%'); // #f0f0f0
-            root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-            root.style.setProperty('--accent-foreground', '0 0% 98%'); // White for on-accent text
-            root.style.setProperty('--destructive', '0 84.2% 60.2%');
-            root.style.setProperty('--destructive-foreground', '0 0% 98%');
-            root.style.setProperty('--border', '0 0% 89.8%');
-            root.style.setProperty('--input', '0 0% 93%'); // #ededed
-            root.style.setProperty('--ring', '0 0% 9%');
+            // Accent colors
+            p('primary', 40); p('on-primary', 100);
+            p('primary-container', 90); p('on-primary-container', 10);
+            p('secondary', 40); p('on-secondary', 100);
+            p('secondary-container', 90); p('on-secondary-container', 10);
+            p('tertiary', 40); p('on-tertiary', 100);
+            p('tertiary-container', 90); p('on-tertiary-container', 10);
+
+            // Neutral / Surface colors
+            n('background', 98); n('on-background', 10);
+            n('surface', 98); n('on-surface', 10);
+            n('on-surface-variant', 30);
+            n('surface-container-lowest', 100);
+            n('surface-container-low', 96);
+            n('surface-container', 94);
+            n('surface-container-high', 92);
+            n('surface-container-highest', 90);
+
+            // Outlines
+            n('outline', 60); n('outline-variant', 80);
+            
+            // Destructive
+            root.style.setProperty('--destructive', '0 84% 60%');
+            root.style.setProperty('--on-destructive', '0 0% 100%');
         }
 
     }, [theme, accentColor]);
@@ -232,7 +246,7 @@ const AppContent: React.FC = () => {
     if (loading) {
         return (
             <div className="flex h-screen w-full items-center justify-center bg-background">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         );
     }

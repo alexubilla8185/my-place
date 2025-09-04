@@ -31,14 +31,14 @@ const NoteForm: React.FC<{ onSave: (note: Note) => void; noteToEdit?: Note | nul
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-6 bg-card border border-border rounded-lg shadow-sm space-y-4 mb-8">
-            <h2 className="text-xl font-semibold">{noteToEdit ? 'Edit Note' : 'Create New Note'}</h2>
-            <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required className="w-full p-3 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring"/>
-            <textarea placeholder="Content" value={content} onChange={e => setContent(e.target.value)} rows={5} className="w-full p-3 bg-input border-border rounded-md focus:ring-2 focus:ring-ring"></textarea>
-            <input type="datetime-local" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full p-3 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring"/>
+        <form onSubmit={handleSubmit} className="p-6 bg-surface-container border border-outline-variant rounded-xl space-y-4 mb-8">
+            <h2 className="text-xl font-semibold text-on-surface">{noteToEdit ? 'Edit Note' : 'Create New Note'}</h2>
+            <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required className="w-full p-3 bg-surface-container-highest text-on-surface border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"/>
+            <textarea placeholder="Content" value={content} onChange={e => setContent(e.target.value)} rows={5} className="w-full p-3 bg-surface-container-highest text-on-surface border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"></textarea>
+            <input type="datetime-local" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full p-3 bg-surface-container-highest text-on-surface border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"/>
             <div className="flex justify-end gap-4 pt-2">
-                <button type="button" onClick={onCancel} className="px-6 py-2.5 rounded-md hover:bg-muted font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">{noteToEdit ? 'Save Changes' : 'Add Note'}</button>
+                <button type="button" onClick={onCancel} className="px-6 py-2.5 rounded-full hover:bg-surface-container-high font-semibold">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90">{noteToEdit ? 'Save Changes' : 'Add Note'}</button>
             </div>
         </form>
     );
@@ -92,7 +92,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage, s
       {!isFormVisible && (
         <button 
           onClick={() => { setNoteToEdit(null); setIsFormVisible(true); }}
-          className="fixed z-20 bottom-6 right-6 sm:bottom-8 sm:right-8 w-16 h-16 bg-accent text-accent-foreground rounded-full shadow-lg flex items-center justify-center transform hover:scale-105 transition-transform"
+          className="fixed z-20 bottom-6 right-6 sm:bottom-8 sm:right-8 w-16 h-16 bg-primary-container text-on-primary-container rounded-2xl shadow-lg flex items-center justify-center transform hover:scale-105 transition-transform"
           aria-label="New Note"
         >
           <AddIcon className="w-8 h-8"/>
@@ -101,24 +101,24 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage, s
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {notes.map(note => (
-          <div key={note.id} className="bg-card p-6 rounded-lg border border-border flex flex-col">
-            <h3 className="text-lg font-bold mb-2">{note.title}</h3>
-            <p className="flex-1 text-muted-foreground whitespace-pre-wrap mb-4">{note.content}</p>
+          <div key={note.id} className="bg-surface-container p-6 rounded-xl border border-outline-variant flex flex-col">
+            <h3 className="text-lg font-bold mb-2 text-on-surface">{note.title}</h3>
+            <p className="flex-1 text-on-surface-variant whitespace-pre-wrap mb-4">{note.content}</p>
             
             <div className="mt-auto"> 
-              {note.dueDate && <p className="text-xs mb-4 text-accent">Due: {new Date(note.dueDate).toLocaleDateString()}</p>}
-              <div className="flex justify-between items-center gap-2 pt-4 border-t border-border">
+              {note.dueDate && <p className="text-xs mb-4 text-tertiary">Due: {new Date(note.dueDate).toLocaleDateString()}</p>}
+              <div className="flex justify-between items-center gap-2 pt-4 border-t border-outline-variant">
                   <button 
                     onClick={() => handleSummarize(note.content)} 
                     disabled={isSummaryLoading}
-                    className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2 disabled:opacity-50"
+                    className="text-sm font-semibold bg-secondary-container text-on-secondary-container hover:opacity-90 px-4 py-2 rounded-full transition-colors flex items-center gap-2 disabled:opacity-50"
                   >
                     {user?.isGuest && !isSummaryLoading && <PlusFeatureIcon className="w-5 h-5" />}
                     {isSummaryLoading ? 'Summarizing...' : 'Summarize'}
                   </button>
                   <div className="flex items-center gap-1">
-                    <button onClick={() => { setNoteToEdit(note); setIsFormVisible(true); window.scrollTo(0,0); }} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
-                    <button onClick={() => handleDeleteNote(note.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>
+                    <button onClick={() => { setNoteToEdit(note); setIsFormVisible(true); window.scrollTo(0,0); }} className="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-full"><EditIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleDeleteNote(note.id)} className="p-2 text-on-surface-variant hover:text-destructive hover:bg-surface-container-high rounded-full"><DeleteIcon className="w-5 h-5"/></button>
                   </div>
               </div>
             </div>

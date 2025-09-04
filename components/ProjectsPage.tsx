@@ -181,7 +181,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
         <h1 className="hidden lg:block text-3xl font-bold">Projects</h1>
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90 flex items-center gap-2"
+          className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90 flex items-center gap-2"
         >
           <AddIcon className="w-5 h-5"/>
           New Project
@@ -190,22 +190,22 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map(project => (
-          <div key={project.id} className="bg-card p-6 rounded-lg border border-border flex flex-col">
-            <h3 className="text-lg font-bold mb-2">{project.name}</h3>
-            <p className="flex-1 text-muted-foreground text-sm mb-4">{project.description}</p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground py-3 border-y border-border">
+          <div key={project.id} className="bg-surface-container p-6 rounded-xl border border-outline-variant flex flex-col">
+            <h3 className="text-lg font-bold mb-2 text-on-surface">{project.name}</h3>
+            <p className="flex-1 text-on-surface-variant text-sm mb-4">{project.description}</p>
+            <div className="flex items-center gap-4 text-sm text-on-surface-variant py-3 border-y border-outline-variant">
                 <div className="flex items-center gap-2" title="Notes"><NotesIcon className="w-4 h-4"/><span>{project.noteIds.length}</span></div>
                 <div className="flex items-center gap-2" title="Tasks"><CheckSquareIcon className="w-4 h-4"/><span>{project.taskIds.length}</span></div>
                 <div className="flex items-center gap-2" title="Recordings"><VoiceRecorderIcon className="w-4 h-4"/><span>{project.recordingIds.length}</span></div>
             </div>
              <div className="flex justify-between items-center gap-2 pt-4">
                 <div className="flex items-center gap-1">
-                    <button onClick={() => handleDeleteProject(project.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>
-                    <button onClick={() => handleOpenAssignModal(project)} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleDeleteProject(project.id)} className="p-2 text-on-surface-variant hover:text-destructive hover:bg-surface-container-high rounded-full"><DeleteIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleOpenAssignModal(project)} className="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-full"><EditIcon className="w-5 h-5"/></button>
                 </div>
                 <button
                     onClick={() => handleGenerateDocsClick(project)}
-                    className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2">
+                    className="text-sm font-semibold bg-primary text-on-primary hover:opacity-90 px-4 py-2 rounded-full transition-colors flex items-center gap-2">
                     {user?.isGuest && <PlusFeatureIcon className="w-5 h-5" />}
                     Generate Docs
                 </button>
@@ -217,11 +217,11 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
       {/* Create Project Modal */}
       <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} title="Create New Project">
         <form onSubmit={handleCreateProject} className="space-y-4">
-            <input type="text" placeholder="Project Name" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} required className="w-full p-3 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring"/>
-            <textarea placeholder="Description" value={newProjectDesc} onChange={e => setNewProjectDesc(e.target.value)} rows={3} className="w-full p-3 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring"></textarea>
+            <input type="text" placeholder="Project Name" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} required className="w-full p-3 bg-input border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"/>
+            <textarea placeholder="Description" value={newProjectDesc} onChange={e => setNewProjectDesc(e.target.value)} rows={3} className="w-full p-3 bg-input border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"></textarea>
             <div className="flex justify-end gap-4 pt-2">
-                <button type="button" onClick={() => setIsCreateModalOpen(false)} className="px-6 py-2.5 rounded-md hover:bg-muted font-semibold">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Create Project</button>
+                <button type="button" onClick={() => setIsCreateModalOpen(false)} className="px-6 py-2.5 rounded-full hover:bg-surface-container-high font-semibold">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90">Create Project</button>
             </div>
         </form>
       </Modal>
@@ -232,61 +232,58 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
             <div>
               <h4 className="font-semibold mb-2">Notes</h4>
               {unassignedItems.notes.length > 0 || selectedNoteIds.length > 0 ? (
-                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-border rounded-md bg-secondary">
+                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-outline-variant rounded-lg bg-surface-container-low">
                   {[...unassignedItems.notes, ...notes.filter(n => selectedNoteIds.includes(n.id) && !unassignedItems.notes.find(un => un.id === n.id))].map(note => (
-                    <label key={note.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer">
-                      <input type="checkbox" checked={selectedNoteIds.includes(note.id)} onChange={() => toggleSelection(note.id, 'note')} className="w-4 h-4 accent-accent"/>
+                    <label key={note.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-surface-container-high cursor-pointer">
+                      <input type="checkbox" checked={selectedNoteIds.includes(note.id)} onChange={() => toggleSelection(note.id, 'note')} className="w-4 h-4 accent-primary"/>
                       <span>{note.title}</span>
                     </label>
                   ))}
                 </div>
-              ) : <p className="text-muted-foreground text-sm">No available notes.</p>}
+              ) : <p className="text-on-surface-variant text-sm">No available notes.</p>}
             </div>
             {/* Repeat for Tasks and Recordings */}
              <div>
               <h4 className="font-semibold mb-2">Tasks</h4>
                 {[...unassignedItems.tasks, ...tasks.filter(t => selectedTaskIds.includes(t.id) && !unassignedItems.tasks.find(un => un.id === t.id))].length > 0 ? (
-                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-border rounded-md bg-secondary">
+                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-outline-variant rounded-lg bg-surface-container-low">
                   {[...unassignedItems.tasks, ...tasks.filter(t => selectedTaskIds.includes(t.id) && !unassignedItems.tasks.find(un => un.id === t.id))].map(task => (
-                    <label key={task.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer">
-                      <input type="checkbox" checked={selectedTaskIds.includes(task.id)} onChange={() => toggleSelection(task.id, 'task')} className="w-4 h-4 accent-accent"/>
+                    <label key={task.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-surface-container-high cursor-pointer">
+                      <input type="checkbox" checked={selectedTaskIds.includes(task.id)} onChange={() => toggleSelection(task.id, 'task')} className="w-4 h-4 accent-primary"/>
                       <span>{task.content}</span>
                     </label>
                   ))}
                 </div>
-              ) : <p className="text-muted-foreground text-sm">No available tasks.</p>}
+              ) : <p className="text-on-surface-variant text-sm">No available tasks.</p>}
             </div>
              <div>
               <h4 className="font-semibold mb-2">Recordings</h4>
                {[...unassignedItems.recordings, ...recordings.filter(r => selectedRecordingIds.includes(r.id) && !unassignedItems.recordings.find(un => un.id === r.id))].length > 0 ? (
-                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-border rounded-md bg-secondary">
+                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-outline-variant rounded-lg bg-surface-container-low">
                   {[...unassignedItems.recordings, ...recordings.filter(r => selectedRecordingIds.includes(r.id) && !unassignedItems.recordings.find(un => un.id === r.id))].map(rec => (
-                    <label key={rec.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer">
-                      <input type="checkbox" checked={selectedRecordingIds.includes(rec.id)} onChange={() => toggleSelection(rec.id, 'recording')} className="w-4 h-4 accent-accent"/>
+                    <label key={rec.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-surface-container-high cursor-pointer">
+                      <input type="checkbox" checked={selectedRecordingIds.includes(rec.id)} onChange={() => toggleSelection(rec.id, 'recording')} className="w-4 h-4 accent-primary"/>
                       <span>{rec.name}</span>
                     </label>
                   ))}
                 </div>
-              ) : <p className="text-muted-foreground text-sm">No available recordings.</p>}
+              ) : <p className="text-on-surface-variant text-sm">No available recordings.</p>}
             </div>
           </div>
-          <div className="flex justify-end gap-4 pt-4 mt-4 border-t border-border">
-            <button onClick={() => handleAssignItems()} className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Save Assignments</button>
+          <div className="flex justify-end gap-4 pt-4 mt-4 border-t border-outline-variant">
+            <button onClick={() => handleAssignItems()} className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90">Save Assignments</button>
           </div>
       </Modal>
 
        {/* Generate Docs Modal */}
       <Modal isOpen={isDocsModalOpen} onClose={() => { setIsDocsModalOpen(false); setDocType(null); setGeneratedDoc(''); setSelectedProject(null); }} title="Generate Documentation">
-        {!docType ? (
+        {!generatedDoc && !isGenerating ? (
             <div className="space-y-4 text-center">
                 <p>Choose a document type to generate for "{selectedProject?.name}":</p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
-                    <button onClick={() => setDocType('Status Report')} className="px-6 py-3 bg-secondary font-semibold rounded-md hover:bg-muted">Status Report</button>
-                    <button onClick={() => setDocType('Technical Brief')} className="px-6 py-3 bg-secondary font-semibold rounded-md hover:bg-muted">Technical Brief</button>
-                    <button onClick={() => setDocType('Meeting Summary')} className="px-6 py-3 bg-secondary font-semibold rounded-md hover:bg-muted">Meeting Summary</button>
-                </div>
-                <div className="pt-4">
-                  <button onClick={handleGenerateDocs} disabled={!docType} className="px-8 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed">Generate</button>
+                    <button onClick={() => {setDocType('Status Report'); handleGenerateDocs()}} className="px-6 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-full hover:opacity-90">Status Report</button>
+                    <button onClick={() => {setDocType('Technical Brief'); handleGenerateDocs()}} className="px-6 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-full hover:opacity-90">Technical Brief</button>
+                    <button onClick={() => {setDocType('Meeting Summary'); handleGenerateDocs()}} className="px-6 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-full hover:opacity-90">Meeting Summary</button>
                 </div>
             </div>
         ) : isGenerating ? (
@@ -295,10 +292,10 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
             </div>
         ) : (
             <div>
-                <pre className="whitespace-pre-wrap bg-secondary p-4 rounded-md max-h-80 overflow-y-auto font-sans text-sm">{generatedDoc}</pre>
-                <div className="flex justify-end gap-4 mt-4 pt-4 border-t border-border">
-                    <button onClick={() => { setDocType(null); setGeneratedDoc('');}} className="px-6 py-2.5 rounded-md hover:bg-muted font-semibold">Back</button>
-                    <button onClick={saveDocAsNote} className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Save as Note</button>
+                <pre className="whitespace-pre-wrap bg-surface-container-low p-4 rounded-lg max-h-80 overflow-y-auto font-sans text-sm">{generatedDoc}</pre>
+                <div className="flex justify-end gap-4 mt-4 pt-4 border-t border-outline-variant">
+                    <button onClick={() => { setDocType(null); setGeneratedDoc('');}} className="px-6 py-2.5 rounded-full hover:bg-surface-container-high font-semibold">Back</button>
+                    <button onClick={saveDocAsNote} className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90">Save as Note</button>
                 </div>
             </div>
         )}

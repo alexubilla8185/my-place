@@ -10,7 +10,7 @@ const KanbanCard: React.FC<{ task: Task }> = ({ task }) => (
     <div
         draggable
         onDragStart={(e) => e.dataTransfer.setData('taskId', task.id)}
-        className="p-4 bg-card border border-border rounded-lg shadow-sm cursor-grab active:cursor-grabbing"
+        className="p-4 bg-surface-container-high rounded-lg shadow-sm cursor-grab active:cursor-grabbing border border-outline-variant"
     >
         {task.content}
     </div>
@@ -18,8 +18,8 @@ const KanbanCard: React.FC<{ task: Task }> = ({ task }) => (
 
 const KanbanColumn: React.FC<{ title: KanbanStatus; tasks: Task[]; children: React.ReactNode }> = ({ title, tasks, children }) => {
     return (
-        <div className="flex-1 p-4 bg-secondary rounded-lg min-w-[300px]">
-            <h3 className="font-bold text-lg mb-4 tracking-wider px-2">{title} <span className="text-sm font-normal text-muted-foreground">{tasks.length}</span></h3>
+        <div className="flex-1 p-4 bg-surface-container rounded-xl min-w-[300px]">
+            <h3 className="font-bold text-lg mb-4 tracking-wider px-2 text-on-surface">{title} <span className="text-sm font-normal text-on-surface-variant">{tasks.length}</span></h3>
             <div className="space-y-4">
                 {children}
             </div>
@@ -57,15 +57,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks }) => {
     return (
         <div className="space-y-6">
             <h1 className="hidden lg:block text-3xl font-bold">Kanban Board</h1>
-            <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-4">
+            <form onSubmit={handleAddTask} className="flex flex-col sm:flex-row gap-4 p-4 bg-surface-container rounded-xl">
                 <input
                     type="text"
                     value={newTaskContent}
                     onChange={(e) => setNewTaskContent(e.target.value)}
                     placeholder="Add a new task..."
-                    className="flex-grow p-3 px-4 bg-input border border-border rounded-md focus:ring-2 focus:ring-ring focus:outline-none"
+                    className="flex-grow p-3 px-4 bg-surface-container-highest text-on-surface border-b-2 border-outline rounded-t-lg focus:outline-none focus:border-primary transition-colors"
                 />
-                <button type="submit" className="px-6 py-3 sm:py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/90">Add Task</button>
+                <button type="submit" className="px-6 py-3 sm:py-2 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90">Add Task</button>
             </form>
 
             <div className="flex flex-col lg:flex-row gap-6 overflow-x-auto pb-4">

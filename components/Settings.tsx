@@ -27,29 +27,29 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
       <div className="space-y-4">
         {/* User Profile Section */}
         <div className="flex items-center space-x-4 p-4">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center font-bold text-2xl">
-                {user.isGuest ? <UserIcon className="w-8 h-8 text-muted-foreground"/> : user.name.charAt(0).toUpperCase()}
+            <div className="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center font-bold text-2xl text-on-secondary-container">
+                {user.isGuest ? <UserIcon className="w-8 h-8"/> : user.name.charAt(0).toUpperCase()}
             </div>
             <div>
-                <h2 className="text-xl font-semibold">{user.name}</h2>
-                <p className="text-muted-foreground">{user.email}</p>
+                <h2 className="text-xl font-semibold text-on-surface">{user.name}</h2>
+                <p className="text-on-surface-variant">{user.email}</p>
             </div>
         </div>
 
         {/* Settings List */}
-        <div className="border-y border-border">
-            {settingsItems.map((item) => (
-                 <button key={item.label} onClick={() => setActivePage(item.page)} className="w-full flex items-center text-left p-4 hover:bg-muted transition-colors border-b border-border last:border-b-0">
-                    <div className="text-muted-foreground">{item.icon}</div>
-                    <span className="ml-4 flex-1">{item.label}</span>
-                    <ChevronRightIcon className="w-5 h-5 text-muted-foreground"/>
+        <div className="rounded-xl overflow-hidden border border-outline-variant">
+            {settingsItems.map((item, index) => (
+                 <button key={item.label} onClick={() => setActivePage(item.page)} className={`w-full flex items-center text-left p-4 h-16 hover:bg-surface-container-high transition-colors ${index < settingsItems.length - 1 ? 'border-b border-outline-variant' : ''}`}>
+                    <div className="text-on-surface-variant">{item.icon}</div>
+                    <span className="ml-4 flex-1 text-on-surface">{item.label}</span>
+                    <ChevronRightIcon className="w-5 h-5 text-on-surface-variant"/>
                  </button>
             ))}
         </div>
         
         {/* Sign Out */}
-        <div className="border-y border-border">
-             <button onClick={signOut} className="w-full flex items-center text-left p-4 text-destructive hover:bg-muted transition-colors">
+        <div className="rounded-xl overflow-hidden border border-outline-variant">
+             <button onClick={signOut} className="w-full flex items-center text-left p-4 h-16 text-destructive hover:bg-surface-container-high transition-colors">
                 <div className="text-destructive"><SignOutIcon className="w-6 h-6"/></div>
                 <span className="ml-4 flex-1">Sign out</span>
              </button>
