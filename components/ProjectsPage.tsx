@@ -2,9 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Project, Note, Task, Recording, KanbanStatus, Page } from '../types';
 import { generateDocumentation } from '../services/geminiService';
 import Modal from './Modal';
-import { AddIcon, NotesIcon, CheckSquareIcon, VoiceRecorderIcon, EditIcon, DeleteIcon } from './icons';
+import { AddIcon, NotesIcon, CheckSquareIcon, VoiceRecorderIcon, EditIcon, DeleteIcon, PlusFeatureIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
-import PlusFeatureTooltip from './PlusFeatureTooltip';
 
 interface ProjectsPageProps {
   projects: Project[];
@@ -14,9 +13,10 @@ interface ProjectsPageProps {
   recordings: Recording[];
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   setActivePage: (page: Page) => void;
+  setIsUpgradePromptVisible: (isVisible: boolean) => void;
 }
 
-const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, notes, tasks, recordings, setNotes, setActivePage }) => {
+const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, notes, tasks, recordings, setNotes, setActivePage, setIsUpgradePromptVisible }) => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
@@ -86,6 +86,15 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
     setProjects(projects.map(p => p.id === updatedProject.id ? updatedProject : p));
     setIsAssignModalOpen(false);
     setSelectedProject(null);
+  };
+  
+  const handleGenerateDocsClick = (project: Project) => {
+    if (user?.isGuest) {
+        setIsUpgradePromptVisible(true);
+        return;
+    }
+    setSelectedProject(project);
+    setIsDocsModalOpen(true);
   };
 
   const handleGenerateDocs = async () => {
@@ -194,12 +203,12 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
                     <button onClick={() => handleDeleteProject(project.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>
                     <button onClick={() => handleOpenAssignModal(project)} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
                 </div>
-                <div className="flex items-center gap-2">
-                    <button onClick={() => { setSelectedProject(project); setIsDocsModalOpen(true); }} className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2">
-                        Generate Docs
-                    </button>
-                    {user?.isGuest && <PlusFeatureTooltip setActivePage={setActivePage} />}
-                </div>
+                <button
+                    onClick={() => handleGenerateDocsClick(project)}
+                    className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2">
+                    {user?.isGuest && <PlusFeatureIcon className="w-5 h-5" />}
+                    Generate Docs
+                </button>
               </div>
           </div>
         ))}

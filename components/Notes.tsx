@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Note, Page } from '../types';
 import Modal from './Modal';
 import { summarizeText } from '../services/geminiService';
-import { EditIcon, DeleteIcon, AddIcon } from './icons';
+import { EditIcon, DeleteIcon, AddIcon, PlusFeatureIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
-import PlusFeatureTooltip from './PlusFeatureTooltip';
 
 interface NotesPageProps {
   notes: Note[];
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   setActivePage: (page: Page) => void;
+  setIsUpgradePromptVisible: (isVisible: boolean) => void;
 }
 
 const NoteForm: React.FC<{ onSave: (note: Note) => void; noteToEdit?: Note | null; onCancel: () => void;}> = ({ onSave, noteToEdit, onCancel }) => {
@@ -44,7 +44,7 @@ const NoteForm: React.FC<{ onSave: (note: Note) => void; noteToEdit?: Note | nul
     );
 };
 
-const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage }) => {
+const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage, setIsUpgradePromptVisible }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
@@ -70,6 +70,10 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage })
   };
   
   const handleSummarize = async (content: string) => {
+      if (user?.isGuest) {
+        setIsUpgradePromptVisible(true);
+        return;
+      }
       setIsSummaryLoading(true);
       setSummary("Generating summary...");
       const result = await summarizeText(content);
@@ -104,12 +108,14 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage })
             <div className="mt-auto"> 
               {note.dueDate && <p className="text-xs mb-4 text-accent">Due: {new Date(note.dueDate).toLocaleDateString()}</p>}
               <div className="flex justify-between items-center gap-2 pt-4 border-t border-border">
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => handleSummarize(note.content)} className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2">
-                        Summarize
-                    </button>
-                    {user?.isGuest && <PlusFeatureTooltip setActivePage={setActivePage} />}
-                  </div>
+                  <button 
+                    onClick={() => handleSummarize(note.content)} 
+                    disabled={isSummaryLoading}
+                    className="text-sm font-semibold bg-accent text-accent-foreground hover:bg-accent/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {user?.isGuest && !isSummaryLoading && <PlusFeatureIcon className="w-5 h-5" />}
+                    {isSummaryLoading ? 'Summarizing...' : 'Summarize'}
+                  </button>
                   <div className="flex items-center gap-1">
                     <button onClick={() => { setNoteToEdit(note); setIsFormVisible(true); window.scrollTo(0,0); }} className="p-2 text-muted-foreground hover:text-accent hover:bg-muted rounded-full"><EditIcon className="w-5 h-5"/></button>
                     <button onClick={() => handleDeleteNote(note.id)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-muted rounded-full"><DeleteIcon className="w-5 h-5"/></button>

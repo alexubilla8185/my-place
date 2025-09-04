@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Page, Note, Task, KanbanStatus } from '../types';
 import { scheduleTaskWithAI } from '../services/geminiService';
-import { NotesIcon, CheckSquareIcon, PartyPopperIcon } from './icons';
+import { NotesIcon, CheckSquareIcon, PartyPopperIcon, PlusFeatureIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
-import PlusFeatureTooltip from './PlusFeatureTooltip';
 
 interface DashboardProps {
   notes: Note[];
@@ -11,6 +10,7 @@ interface DashboardProps {
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   setActivePage: (page: Page) => void;
+  setIsUpgradePromptVisible: (isVisible: boolean) => void;
 }
 
 const StatCard: React.FC<{ title: string; value: number | string, icon: React.ReactNode, iconBgColor: string }> = ({ title, value, icon, iconBgColor }) => (
@@ -25,7 +25,7 @@ const StatCard: React.FC<{ title: string; value: number | string, icon: React.Re
     </div>
 );
 
-const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActivePage }) => {
+const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActivePage, setIsUpgradePromptVisible }) => {
   const [aiPrompt, setAiPrompt] = useState('');
   const [isScheduling, setIsScheduling] = useState(false);
   const { user } = useAuth();
@@ -47,6 +47,10 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActive
   }, [notes]);
   
   const handleSchedule = async () => {
+      if (user?.isGuest) {
+        setIsUpgradePromptVisible(true);
+        return;
+      }
       if (!aiPrompt.trim()) return;
       setIsScheduling(true);
       const result = await scheduleTaskWithAI(aiPrompt);
@@ -82,7 +86,6 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActive
       <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
         <div className="flex items-center gap-2 mb-4">
             <h2 className="text-xl font-semibold">AI Scheduler</h2>
-            {user?.isGuest && <PlusFeatureTooltip setActivePage={setActivePage} />}
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
           <input 
@@ -91,8 +94,10 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActive
             onChange={(e) => setAiPrompt(e.target.value)}
             placeholder="e.g., Remind me to call John tomorrow at 2 pm"
             className="flex-grow p-3 px-4 bg-input text-foreground border border-border rounded-md focus:ring-2 focus:ring-ring focus:outline-none"
+            disabled={user?.isGuest}
           />
-          <button onClick={handleSchedule} disabled={isScheduling} className="px-8 py-3 bg-foreground text-background font-semibold rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+          <button onClick={handleSchedule} disabled={isScheduling} className="px-8 py-3 bg-foreground text-background font-semibold rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            {user?.isGuest && <PlusFeatureIcon className="w-5 h-5 text-background" />}
             {isScheduling ? 'Scheduling...' : 'Schedule'}
           </button>
         </div>

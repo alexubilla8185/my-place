@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import { Page, Theme, Note, Task, Recording, AccentColor, Project, User } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Modal from './components/Modal';
-import { SearchIcon, MenuIcon } from './components/icons';
+import { SearchIcon, MenuIcon, PlusFeatureIcon } from './components/icons';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './components/LoginPage';
 
@@ -38,6 +38,7 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
   const [activePage, setActivePage] = useState<Page>(Page.Dashboard);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isUpgradePromptVisible, setIsUpgradePromptVisible] = useState(false);
 
   const [notes, setNotes] = useLocalStorage<Note[]>('notes', []);
   const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', []);
@@ -52,9 +53,9 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
   const renderPage = () => {
     switch (activePage) {
       case Page.Dashboard:
-        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;
+        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} setIsUpgradePromptVisible={setIsUpgradePromptVisible} />;
       case Page.Notes:
-        return <NotesPage notes={notes} setNotes={setNotes} setActivePage={setActivePage} />;
+        return <NotesPage notes={notes} setNotes={setNotes} setActivePage={setActivePage} setIsUpgradePromptVisible={setIsUpgradePromptVisible} />;
       case Page.Kanban:
         return <KanbanBoard tasks={tasks} setTasks={setTasks} />;
       case Page.Projects:
@@ -66,9 +67,10 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
             recordings={recordings}
             setNotes={setNotes}
             setActivePage={setActivePage}
+            setIsUpgradePromptVisible={setIsUpgradePromptVisible}
           />;
       case Page.VoiceRecorder:
-        return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} setActivePage={setActivePage} />;
+        return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} setActivePage={setActivePage} setIsUpgradePromptVisible={setIsUpgradePromptVisible} />;
       case Page.Settings:
         return <Settings setActivePage={setActivePage} />;
       case Page.Personalization:
@@ -78,7 +80,7 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
       case Page.HowItWorks:
           return <Documentation />;
       default:
-        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;
+        return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} setIsUpgradePromptVisible={setIsUpgradePromptVisible} />;
     }
   };
 
@@ -146,6 +148,25 @@ const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAcce
               {filteredProjects.length === 0 && filteredNotes.length === 0 && filteredTasks.length === 0 && filteredRecordings.length === 0 && <p className="text-center text-muted-foreground py-4">No results found.</p>}
             </>
           )}
+        </div>
+      </Modal>
+
+      <Modal isOpen={isUpgradePromptVisible} onClose={() => setIsUpgradePromptVisible(false)} title="Plus Feature">
+        <div className="text-center">
+            <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                 <PlusFeatureIcon className="w-8 h-8 text-accent"/>
+            </div>
+            <h3 className="text-xl font-bold mb-2">Unlock with My Place Plus</h3>
+            <p className="text-muted-foreground mb-6">This is a premium feature. Upgrade your plan to unlock powerful AI capabilities and boost your productivity.</p>
+            <button
+                onClick={() => {
+                    setActivePage(Page.Upgrade);
+                    setIsUpgradePromptVisible(false);
+                }}
+                className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-accent/90"
+            >
+                Upgrade Now
+            </button>
         </div>
       </Modal>
     </div>
