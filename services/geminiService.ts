@@ -83,3 +83,35 @@ export const transcribeAudio = async (audioUrl: string): Promise<string> => {
     }, 1500);
   });
 };
+
+export const generateDocumentation = async (projectName: string, projectContent: string, docType: 'Status Report' | 'Technical Brief' | 'Meeting Summary'): Promise<string> => {
+  const ai = getAiClient();
+  if (!ai) {
+    return "AI features are disabled. Please configure your API key.";
+  }
+  
+  try {
+    const prompt = `
+      You are an expert project manager and technical writer.
+      Generate a "${docType}" for a project named "${projectName}".
+      Use the following collection of notes, tasks, and meeting transcripts to create the document.
+      The content is provided in a string format, with sections for notes, tasks (categorized by status), and recordings (with transcripts).
+      Structure the output clearly with Markdown headings, bullet points, and concise summaries.
+      If a section has no content (e.g., no completed tasks), state that clearly.
+
+      Project Content:
+      ---
+      ${projectContent}
+      ---
+    `;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+    return response.text;
+  } catch (error) {
+    console.error("Error generating documentation:", error);
+    return "Could not generate documentation. Please check the console for errors.";
+  }
+};

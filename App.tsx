@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
-import { Page, Theme, Note, Task, Recording, AccentColor } from './types';
+import { Page, Theme, Note, Task, Recording, AccentColor, Project } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Modal from './components/Modal';
 import { SearchIcon, MenuIcon } from './components/icons';
@@ -14,6 +14,7 @@ import Settings from './components/Settings';
 import Upgrade from './components/Upgrade';
 import Documentation from './components/Documentation';
 import Personalization from './components/Personalization';
+import ProjectsPage from './components/ProjectsPage';
 
 const accentColorMap: Record<AccentColor, {light: string, dark: string}> = {
     [AccentColor.Default]: { light: '240 5.9% 10%', dark: '0 0% 98%' },
@@ -34,6 +35,7 @@ const App: React.FC = () => {
   const [notes, setNotes] = useLocalStorage<Note[]>('notes', []);
   const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', []);
   const [recordings, setRecordings] = useLocalStorage<Recording[]>('recordings', []);
+  const [projects, setProjects] = useLocalStorage<Project[]>('projects', []);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -99,6 +101,15 @@ const App: React.FC = () => {
         return <NotesPage notes={notes} setNotes={setNotes} />;
       case Page.Kanban:
         return <KanbanBoard tasks={tasks} setTasks={setTasks} />;
+      case Page.Projects:
+        return <ProjectsPage 
+            projects={projects}
+            setProjects={setProjects}
+            notes={notes}
+            tasks={tasks}
+            recordings={recordings}
+            setNotes={setNotes}
+          />;
       case Page.VoiceRecorder:
         return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} />;
       case Page.Settings:
@@ -126,6 +137,11 @@ const App: React.FC = () => {
   const filteredRecordings = recordings.filter(rec =>
     (rec.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (rec.transcript && rec.transcript.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+  
+  const filteredProjects = projects.filter(project =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -166,10 +182,11 @@ const App: React.FC = () => {
         <div className="mt-4 space-y-4">
           {searchQuery && (
             <>
+              {filteredProjects.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Projects</h4><div className="space-y-2">{filteredProjects.map(p => <div key={p.id} className="p-3 bg-secondary rounded-md">{p.name}</div>)}</div></div>}
               {filteredNotes.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Notes</h4><div className="space-y-2">{filteredNotes.map(n => <div key={n.id} className="p-3 bg-secondary rounded-md">{n.title}</div>)}</div></div>}
               {filteredTasks.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Tasks</h4><div className="space-y-2">{filteredTasks.map(t => <div key={t.id} className="p-3 bg-secondary rounded-md">{t.content}</div>)}</div></div>}
               {filteredRecordings.length > 0 && <div><h4 className="font-semibold mb-2 text-accent">Recordings</h4><div className="space-y-2">{filteredRecordings.map(r => <div key={r.id} className="p-3 bg-secondary rounded-md">{r.name}</div>)}</div></div>}
-              {filteredNotes.length === 0 && filteredTasks.length === 0 && filteredRecordings.length === 0 && <p className="text-center text-muted-foreground py-4">No results found.</p>}
+              {filteredProjects.length === 0 && filteredNotes.length === 0 && filteredTasks.length === 0 && filteredRecordings.length === 0 && <p className="text-center text-muted-foreground py-4">No results found.</p>}
             </>
           )}
         </div>

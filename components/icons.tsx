@@ -16,6 +16,10 @@ export const KanbanIcon = ({ className }: { className?: string }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h4v18H6V3Zm8 0h4v10h-4V3Zm0 12h4v6h-4v-6Z"/></svg>
 );
 
+export const ProjectsIcon = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+);
+
 export const DocsIcon = ({ className }: { className?: string }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2ZM4 6H2v14a2 2 0 0 0 2 2h12v-2H4V6Zm12 10H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-4h-5V6h5v2Z"/></svg>
 );

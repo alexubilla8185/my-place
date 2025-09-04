@@ -4,6 +4,7 @@ export enum Page {
   Notes = 'Notes',
   VoiceRecorder = 'Voice Recorder',
   Kanban = 'Kanban Board',
+  Projects = 'Projects',
   HowItWorks = 'How it works',
   Upgrade = 'Upgrade to Plus',
   Settings = 'Settings',
@@ -50,5 +51,15 @@ export interface Recording {
   name: string;
   audioUrl: string;
   transcript?: string;
+  createdAt: number;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  noteIds: string[];
+  taskIds: string[];
+  recordingIds: string[];
   createdAt: number;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page } from '../types';
-import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon } from './icons';
+import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon, ProjectsIcon } from './icons';
 
 interface SidebarProps {
   activePage: Page;
@@ -15,6 +15,7 @@ const navItems = [
   { page: Page.Notes, icon: <NotesIcon className="w-6 h-6" /> },
   { page: Page.VoiceRecorder, icon: <VoiceRecorderIcon className="w-6 h-6" /> },
   { page: Page.Kanban, icon: <KanbanIcon className="w-6 h-6" /> },
+  { page: Page.Projects, icon: <ProjectsIcon className="w-6 h-6" /> },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchClick, isSidebarOpen, setIsSidebarOpen }) => {
