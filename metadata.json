@@ -1,7 +1,5 @@
 {
   "name": "My Place",
   "description": "A simple, all-in-one productivity tool designed to help you streamline your workflow. Manage your notes, track tasks, and organize key information from a single, intuitive dashboard.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
+  "requestFramePermissions": []
 }
