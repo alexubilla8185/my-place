@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page } from '../types';
-import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon, ProjectsIcon } from './icons';
+import { DashboardIcon, NotesIcon, VoiceRecorderIcon, KanbanIcon, SettingsIcon, SearchIcon, CloseIcon, QuestionMarkIcon, ProjectsIcon, PartyPopperIcon } from './icons';
 import Logo from './Logo';
 
 interface SidebarProps {
@@ -71,6 +71,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage, onSearchCl
                 ))}
             </ul>
           </nav>
+
+          <div className="px-2 my-4">
+             <button
+                onClick={() => { setActivePage(Page.Upgrade); setIsSidebarOpen(false); }}
+                className="flex items-center w-full p-4 transition-all duration-300 rounded-xl text-md font-medium bg-accent/10 text-accent hover:shadow-lg hover:bg-accent hover:text-accent-foreground border-2 border-accent/20 hover:border-accent"
+            >
+                <PartyPopperIcon className="w-6 h-6" />
+                <span className="ml-4 font-bold">Upgrade to Plus</span>
+            </button>
+          </div>
           
           <div className="mt-auto flex items-center justify-center space-x-4 p-4 border-t border-border">
               <div className="relative group">

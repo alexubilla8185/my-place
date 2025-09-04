@@ -1,4 +1,11 @@
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  isGuest: boolean;
+}
+
 export enum Page {
   Dashboard = 'Dashboard',
   Notes = 'Notes',

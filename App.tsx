@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
-import { Page, Theme, Note, Task, Recording, AccentColor, Project } from './types';
+import { Page, Theme, Note, Task, Recording, AccentColor, Project, User } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Modal from './components/Modal';
 import { SearchIcon, MenuIcon } from './components/icons';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import LoginPage from './components/LoginPage';
 
 // Statically import pages
 import Dashboard from './components/Dashboard';
@@ -25,7 +27,7 @@ const accentColorMap: Record<AccentColor, {light: string, dark: string}> = {
     [AccentColor.Orange]: { light: '24.6 95% 53.1%', dark: '24.6 95% 53.1%' },
 };
 
-const App: React.FC = () => {
+const MainApp: React.FC = () => {
   const [theme, setTheme] = useLocalStorage<Theme>('theme', Theme.System);
   const [accentColor, setAccentColor] = useLocalStorage<AccentColor>('accent-color', AccentColor.Default);
   const [activePage, setActivePage] = useState<Page>(Page.Dashboard);
@@ -193,6 +195,32 @@ const App: React.FC = () => {
       </Modal>
     </div>
   );
+};
+
+const AppContent: React.FC = () => {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center bg-background">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return <LoginPage />;
+    }
+
+    return <MainApp />;
+}
+
+const App: React.FC = () => {
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
+    );
 };
 
 export default App;

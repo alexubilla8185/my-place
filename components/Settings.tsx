@@ -1,12 +1,14 @@
 import React from 'react';
 import { Page } from '../types';
-import { ChevronRightIcon, PersonalizationIcon, DataIcon, VoiceIcon, SecurityIcon, InfoIcon, SignOutIcon } from './icons';
+import { ChevronRightIcon, PersonalizationIcon, DataIcon, VoiceIcon, SecurityIcon, InfoIcon, SignOutIcon, UserIcon } from './icons';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SettingsProps {
   setActivePage: (page: Page) => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
+    const { user, signOut } = useAuth();
     
     const settingsItems = [
         { icon: <PersonalizationIcon className="w-6 h-6"/>, label: 'Personalization', page: Page.Personalization },
@@ -15,6 +17,8 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
         { icon: <SecurityIcon className="w-6 h-6"/>, label: 'Security', page: Page.Dashboard }, // Placeholder
         { icon: <InfoIcon className="w-6 h-6"/>, label: 'About', page: Page.HowItWorks },
     ];
+    
+    if (!user) return null;
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -23,10 +27,12 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
       <div className="space-y-4">
         {/* User Profile Section */}
         <div className="flex items-center space-x-4 p-4">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center font-bold text-2xl">A</div>
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center font-bold text-2xl">
+                {user.isGuest ? <UserIcon className="w-8 h-8 text-muted-foreground"/> : user.name.charAt(0).toUpperCase()}
+            </div>
             <div>
-                <h2 className="text-xl font-semibold">Alejandro Ubilla</h2>
-                <p className="text-muted-foreground">alexubilla8185@gmail.com</p>
+                <h2 className="text-xl font-semibold">{user.name}</h2>
+                <p className="text-muted-foreground">{user.email}</p>
             </div>
         </div>
 
@@ -43,7 +49,7 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
         
         {/* Sign Out */}
         <div className="border-y border-border">
-             <button className="w-full flex items-center text-left p-4 text-destructive hover:bg-muted transition-colors">
+             <button onClick={signOut} className="w-full flex items-center text-left p-4 text-destructive hover:bg-muted transition-colors">
                 <div className="text-destructive"><SignOutIcon className="w-6 h-6"/></div>
                 <span className="ml-4 flex-1">Sign out</span>
              </button>
