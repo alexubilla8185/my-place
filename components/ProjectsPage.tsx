@@ -178,7 +178,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, setProjects, note
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="hidden lg:block text-3xl font-bold">Projects</h1>
+        <h1 className="hidden lg:block text-3xl font-bold text-on-surface">Projects</h1>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full hover:opacity-90 flex items-center gap-2"

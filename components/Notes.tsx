@@ -84,7 +84,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ notes, setNotes, setActivePage, s
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="hidden lg:block text-3xl font-bold">Notes</h1>
+        <h1 className="hidden lg:block text-3xl font-bold text-on-surface">Notes</h1>
       </div>
       
       {isFormVisible && <NoteForm onSave={handleSaveNote} noteToEdit={noteToEdit} onCancel={() => { setIsFormVisible(false); setNoteToEdit(null); }}/>}

@@ -185,8 +185,8 @@ const AppContent: React.FC = () => {
         root.classList.toggle('dark', isDark);
 
         const accent = accentColorMap[accentColor] || accentColorMap.Default;
-        const p = (role, l) => root.style.setProperty(`--${role}`, `${accent.h} ${accent.s}% ${l}%`);
-        const n = (role, l) => root.style.setProperty(`--${role}`, `240 6% ${l}%`); // Neutral palette
+        const p = (role: string, l: number) => root.style.setProperty(`--${role}`, `${accent.h} ${accent.s}% ${l}%`);
+        const n = (role: string, l: number) => root.style.setProperty(`--${role}`, `240 6% ${l}%`); // Neutral palette
         
         if (isDark) {
             // Accent colors
@@ -200,6 +200,7 @@ const AppContent: React.FC = () => {
             // Neutral / Surface colors
             n('background', 10); n('on-background', 90);
             n('surface', 10); n('on-surface', 90);
+            root.style.setProperty('--foreground', `240 6% 90%`); // Explicitly set foreground for dark mode
             n('on-surface-variant', 80);
             n('surface-container-lowest', 4);
             n('surface-container-low', 10);
@@ -226,6 +227,7 @@ const AppContent: React.FC = () => {
             // Neutral / Surface colors
             n('background', 98); n('on-background', 10);
             n('surface', 98); n('on-surface', 10);
+            root.style.setProperty('--foreground', `240 6% 10%`); // Explicitly set foreground for light mode
             n('on-surface-variant', 30);
             n('surface-container-lowest', 100);
             n('surface-container-low', 96);

@@ -22,7 +22,7 @@ const Settings: React.FC<SettingsProps> = ({ setActivePage }) => {
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
-      <h1 className="hidden lg:block text-3xl font-bold">Settings</h1>
+      <h1 className="hidden lg:block text-3xl font-bold text-on-surface">Settings</h1>
       
       <div className="space-y-4">
         {/* User Profile Section */}

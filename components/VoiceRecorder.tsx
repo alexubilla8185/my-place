@@ -81,7 +81,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ recordings, setRecordings
 
   return (
     <div className="space-y-8">
-      <h1 className="hidden lg:block text-3xl font-bold">Voice Recorder</h1>
+      <h1 className="hidden lg:block text-3xl font-bold text-on-surface">Voice Recorder</h1>
       <div className="flex flex-col items-center justify-center p-8 bg-surface-container border border-outline-variant rounded-xl">
         <button
           onClick={isRecording ? stopRecording : startRecording}

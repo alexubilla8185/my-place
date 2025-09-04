@@ -27,7 +27,7 @@ const Personalization: React.FC<PersonalizationProps> = ({ theme, setTheme, acce
             <button onClick={() => setActivePage(Page.Settings)} className="p-2 rounded-full hover:bg-surface-container">
                 <ChevronLeftIcon className="w-6 h-6"/>
             </button>
-            <h1 className="text-3xl font-bold ml-2">Personalization</h1>
+            <h1 className="text-3xl font-bold ml-2 text-on-surface">Personalization</h1>
         </div>
       
       <div className="rounded-xl overflow-hidden border border-outline-variant">
