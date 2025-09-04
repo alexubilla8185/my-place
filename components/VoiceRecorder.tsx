@@ -1,19 +1,23 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Recording } from '../types';
+import { Recording, Page } from '../types';
 import { transcribeAudio } from '../services/geminiService';
 import { PlayIcon, StopIcon, DeleteIcon, VoiceRecorderIcon } from './icons';
+import { useAuth } from '../contexts/AuthContext';
+import PlusFeatureTooltip from './PlusFeatureTooltip';
 
 interface VoiceRecorderProps {
   recordings: Recording[];
   setRecordings: React.Dispatch<React.SetStateAction<Recording[]>>;
+  setActivePage: (page: Page) => void;
 }
 
-const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ recordings, setRecordings }) => {
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ recordings, setRecordings, setActivePage }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcribingId, setTranscribingId] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { user } = useAuth();
 
   const startRecording = async () => {
     try {
@@ -100,9 +104,12 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ recordings, setRecordings
               </div>
               <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
                 <button onClick={() => playRecording(rec.audioUrl)} className="p-2 rounded-full hover:bg-muted"><PlayIcon className="w-5 h-5"/></button>
-                <button onClick={() => handleTranscribe(rec.id, rec.audioUrl)} disabled={transcribingId === rec.id} className="text-sm font-semibold text-accent hover:bg-accent/10 px-3 py-2 rounded-md disabled:opacity-50">
-                    {transcribingId === rec.id ? '...' : 'Transcribe'}
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={() => handleTranscribe(rec.id, rec.audioUrl)} disabled={transcribingId === rec.id} className="text-sm font-semibold text-accent hover:bg-accent/10 px-3 py-2 rounded-md disabled:opacity-50 flex items-center gap-2">
+                        {transcribingId === rec.id ? '...' : 'Transcribe'}
+                    </button>
+                    {user?.isGuest && <PlusFeatureTooltip setActivePage={setActivePage} />}
+                </div>
                 <button onClick={() => handleDelete(rec.id)} className="p-2 rounded-full hover:bg-muted"><DeleteIcon className="w-5 h-5 text-destructive"/></button>
               </div>
             </div>

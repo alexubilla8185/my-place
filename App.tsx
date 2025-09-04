@@ -27,9 +27,14 @@ const accentColorMap: Record<AccentColor, {light: string, dark: string}> = {
     [AccentColor.Orange]: { light: '24.6 95% 53.1%', dark: '24.6 95% 53.1%' },
 };
 
-const MainApp: React.FC = () => {
-  const [theme, setTheme] = useLocalStorage<Theme>('theme', Theme.System);
-  const [accentColor, setAccentColor] = useLocalStorage<AccentColor>('accent-color', AccentColor.Default);
+interface MainAppProps {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  accentColor: AccentColor;
+  setAccentColor: (color: AccentColor) => void;
+}
+
+const MainApp: React.FC<MainAppProps> = ({ theme, setTheme, accentColor, setAccentColor }) => {
   const [activePage, setActivePage] = useState<Page>(Page.Dashboard);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -40,57 +45,6 @@ const MainApp: React.FC = () => {
   const [projects, setProjects] = useLocalStorage<Project[]>('projects', []);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    const isDark = theme === Theme.Dark || (theme === Theme.System && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    root.classList.toggle('dark', isDark);
-
-    const accent = accentColorMap[accentColor] || accentColorMap.Default;
-    root.style.setProperty('--accent', isDark ? accent.dark : accent.light);
-    
-    // Set other colors based on theme
-    if (isDark) {
-        root.style.setProperty('--background', '0 0% 7%'); // #121212
-        root.style.setProperty('--foreground', '0 0% 98%'); // #fafafa
-        root.style.setProperty('--card', '0 0% 11%'); // #1c1c1c
-        root.style.setProperty('--card-foreground', '0 0% 98%');
-        root.style.setProperty('--popover', '0 0% 11%');
-        root.style.setProperty('--popover-foreground', '0 0% 98%');
-        root.style.setProperty('--primary', '0 0% 98%');
-        root.style.setProperty('--primary-foreground', '0 0% 9%');
-        root.style.setProperty('--secondary', '0 0% 11%');
-        root.style.setProperty('--secondary-foreground', '0 0% 98%');
-        root.style.setProperty('--muted', '0 0% 15%'); // #262626
-        root.style.setProperty('--muted-foreground', '0 0% 63.9%'); // #a3a3a3
-        root.style.setProperty('--accent-foreground', '0 0% 9%'); // Black for on-accent text
-        root.style.setProperty('--destructive', '0 62.8% 30.6%');
-        root.style.setProperty('--destructive-foreground', '0 0% 98%');
-        root.style.setProperty('--border', '0 0% 20%'); // #333333
-        root.style.setProperty('--input', '0 0% 15%');
-        root.style.setProperty('--ring', '0 0% 83.1%');
-    } else {
-        root.style.setProperty('--background', '0 0% 96.1%'); // #f5f5f5
-        root.style.setProperty('--foreground', '0 0% 9%');
-        root.style.setProperty('--card', '0 0% 100%'); // #ffffff
-        root.style.setProperty('--card-foreground', '0 0% 9%');
-        root.style.setProperty('--popover', '0 0% 100%');
-        root.style.setProperty('--popover-foreground', '0 0% 9%');
-        root.style.setProperty('--primary', '0 0% 9%');
-        root.style.setProperty('--primary-foreground', '0 0% 98%');
-        root.style.setProperty('--secondary', '0 0% 98%'); // #fafafa
-        root.style.setProperty('--secondary-foreground', '0 0% 9%');
-        root.style.setProperty('--muted', '0 0% 94%'); // #f0f0f0
-        root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-        root.style.setProperty('--accent-foreground', '0 0% 98%'); // White for on-accent text
-        root.style.setProperty('--destructive', '0 84.2% 60.2%');
-        root.style.setProperty('--destructive-foreground', '0 0% 98%');
-        root.style.setProperty('--border', '0 0% 89.8%');
-        root.style.setProperty('--input', '0 0% 93%'); // #ededed
-        root.style.setProperty('--ring', '0 0% 9%');
-    }
-
-  }, [theme, accentColor]);
-
   const handleSearchClick = useCallback(() => {
     setIsSearchOpen(true);
   }, []);
@@ -100,7 +54,7 @@ const MainApp: React.FC = () => {
       case Page.Dashboard:
         return <Dashboard notes={notes} tasks={tasks} setNotes={setNotes} setTasks={setTasks} setActivePage={setActivePage} />;
       case Page.Notes:
-        return <NotesPage notes={notes} setNotes={setNotes} />;
+        return <NotesPage notes={notes} setNotes={setNotes} setActivePage={setActivePage} />;
       case Page.Kanban:
         return <KanbanBoard tasks={tasks} setTasks={setTasks} />;
       case Page.Projects:
@@ -111,9 +65,10 @@ const MainApp: React.FC = () => {
             tasks={tasks}
             recordings={recordings}
             setNotes={setNotes}
+            setActivePage={setActivePage}
           />;
       case Page.VoiceRecorder:
-        return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} />;
+        return <VoiceRecorder recordings={recordings} setRecordings={setRecordings} setActivePage={setActivePage} />;
       case Page.Settings:
         return <Settings setActivePage={setActivePage} />;
       case Page.Personalization:
@@ -199,6 +154,59 @@ const MainApp: React.FC = () => {
 
 const AppContent: React.FC = () => {
     const { user, loading } = useAuth();
+    const [theme, setTheme] = useLocalStorage<Theme>('theme', Theme.System);
+    const [accentColor, setAccentColor] = useLocalStorage<AccentColor>('accent-color', AccentColor.Default);
+
+    useEffect(() => {
+        const root = window.document.documentElement;
+        const isDark = theme === Theme.Dark || (theme === Theme.System && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        root.classList.toggle('dark', isDark);
+
+        const accent = accentColorMap[accentColor] || accentColorMap.Default;
+        root.style.setProperty('--accent', isDark ? accent.dark : accent.light);
+        
+        // Set other colors based on theme
+        if (isDark) {
+            root.style.setProperty('--background', '0 0% 7%'); // #121212
+            root.style.setProperty('--foreground', '0 0% 98%'); // #fafafa
+            root.style.setProperty('--card', '0 0% 11%'); // #1c1c1c
+            root.style.setProperty('--card-foreground', '0 0% 98%');
+            root.style.setProperty('--popover', '0 0% 11%');
+            root.style.setProperty('--popover-foreground', '0 0% 98%');
+            root.style.setProperty('--primary', '0 0% 98%');
+            root.style.setProperty('--primary-foreground', '0 0% 9%');
+            root.style.setProperty('--secondary', '0 0% 11%');
+            root.style.setProperty('--secondary-foreground', '0 0% 98%');
+            root.style.setProperty('--muted', '0 0% 15%'); // #262626
+            root.style.setProperty('--muted-foreground', '0 0% 63.9%'); // #a3a3a3
+            root.style.setProperty('--accent-foreground', '0 0% 9%'); // Black for on-accent text
+            root.style.setProperty('--destructive', '0 62.8% 30.6%');
+            root.style.setProperty('--destructive-foreground', '0 0% 98%');
+            root.style.setProperty('--border', '0 0% 20%'); // #333333
+            root.style.setProperty('--input', '0 0% 15%');
+            root.style.setProperty('--ring', '0 0% 83.1%');
+        } else {
+            root.style.setProperty('--background', '0 0% 96.1%'); // #f5f5f5
+            root.style.setProperty('--foreground', '0 0% 9%');
+            root.style.setProperty('--card', '0 0% 100%'); // #ffffff
+            root.style.setProperty('--card-foreground', '0 0% 9%');
+            root.style.setProperty('--popover', '0 0% 100%');
+            root.style.setProperty('--popover-foreground', '0 0% 9%');
+            root.style.setProperty('--primary', '0 0% 9%');
+            root.style.setProperty('--primary-foreground', '0 0% 98%');
+            root.style.setProperty('--secondary', '0 0% 98%'); // #fafafa
+            root.style.setProperty('--secondary-foreground', '0 0% 9%');
+            root.style.setProperty('--muted', '0 0% 94%'); // #f0f0f0
+            root.style.setProperty('--muted-foreground', '0 0% 45.1%');
+            root.style.setProperty('--accent-foreground', '0 0% 98%'); // White for on-accent text
+            root.style.setProperty('--destructive', '0 84.2% 60.2%');
+            root.style.setProperty('--destructive-foreground', '0 0% 98%');
+            root.style.setProperty('--border', '0 0% 89.8%');
+            root.style.setProperty('--input', '0 0% 93%'); // #ededed
+            root.style.setProperty('--ring', '0 0% 9%');
+        }
+
+    }, [theme, accentColor]);
 
     if (loading) {
         return (
@@ -212,7 +220,7 @@ const AppContent: React.FC = () => {
         return <LoginPage />;
     }
 
-    return <MainApp />;
+    return <MainApp theme={theme} setTheme={setTheme} accentColor={accentColor} setAccentColor={setAccentColor} />;
 }
 
 const App: React.FC = () => {

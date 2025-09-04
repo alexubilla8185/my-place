@@ -195,6 +195,12 @@ export const CheckSquareIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+export const PlusFeatureIcon = ({ className }: { className?: string }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M10 2.5L11.25 6.25L15 7.5L11.25 8.75L10 12.5L8.75 8.75L5 7.5L8.75 6.25L10 2.5ZM5 12.5L5.625 14.375L7.5 15L5.625 15.625L5 17.5L4.375 15.625L2.5 15L4.375 14.375L5 12.5ZM15 12.5L15.625 14.375L17.5 15L15.625 15.625L15 17.5L14.375 15.625L12.5 15L14.375 14.375L15 12.5Z" clipRule="evenodd" />
+    </svg>
+);
+
 export const GoogleIcon = ({ className }: { className?: string }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -203,4 +209,8 @@ export const GoogleIcon = ({ className }: { className?: string }) => (
         <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         <path d="M1 1h22v22H1z" fill="none"/>
     </svg>
+);
+
+export const EyeIcon = ({ className }: { className?: string }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 );

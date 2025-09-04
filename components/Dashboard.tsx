@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Page, Note, Task, KanbanStatus } from '../types';
 import { scheduleTaskWithAI } from '../services/geminiService';
 import { NotesIcon, CheckSquareIcon, PartyPopperIcon } from './icons';
+import { useAuth } from '../contexts/AuthContext';
+import PlusFeatureTooltip from './PlusFeatureTooltip';
 
 interface DashboardProps {
   notes: Note[];
@@ -26,6 +28,7 @@ const StatCard: React.FC<{ title: string; value: number | string, icon: React.Re
 const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActivePage }) => {
   const [aiPrompt, setAiPrompt] = useState('');
   const [isScheduling, setIsScheduling] = useState(false);
+  const { user } = useAuth();
 
   const completedTasks = useMemo(() => tasks.filter(t => t.status === KanbanStatus.Done).length, [tasks]);
 
@@ -77,7 +80,10 @@ const Dashboard: React.FC<DashboardProps> = ({ notes, tasks, setTasks, setActive
       </div>
 
       <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">AI Scheduler</h2>
+        <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-xl font-semibold">AI Scheduler</h2>
+            {user?.isGuest && <PlusFeatureTooltip setActivePage={setActivePage} />}
+        </div>
         <div className="flex flex-col sm:flex-row gap-4">
           <input 
             type="text"

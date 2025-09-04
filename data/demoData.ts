@@ -37,7 +37,8 @@ export const demoRecordings: Recording[] = [
   {
     id: 'demo-rec-1',
     name: 'Voice Memo on New Feature Idea',
-    audioUrl: '', // This will be a placeholder
+    // A short, silent WAV file to make the play button functional in the demo.
+    audioUrl: 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=',
     transcript: 'Okay, here is a quick thought for the next sprint: what if we add a project management layer on top of everything? We could link notes, tasks, and even these recordings to a specific project. This would be a game-changer for organization.',
     createdAt: now - 4 * 24 * 3600 * 1000,
   }
