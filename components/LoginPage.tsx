@@ -7,8 +7,40 @@ import * as THREE from "three";
 import { useAuth } from '../contexts/AuthContext';
 import { GoogleIcon } from "./icons";
 import Modal from './Modal';
+import Logo from "./Logo";
 
 // --- START OF 3D & ANIMATION COMPONENTS ---
+
+// Utility function to convert HSL color string from CSS variables to an RGB array
+const hslStringToRgb = (hslString: string): number[] => {
+    const parts = hslString.trim().split(' ');
+    if (parts.length < 3) return [128, 128, 128]; 
+
+    const h = parseFloat(parts[0]);
+    const s = parseFloat(parts[1].replace('%', '')) / 100;
+    const l = parseFloat(parts[2].replace('%', '')) / 100;
+
+    if (isNaN(h) || isNaN(s) || isNaN(l)) return [128, 128, 128];
+
+    let c = (1 - Math.abs(2 * l - 1)) * s;
+    let x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    let m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+
+    if (h >= 0 && h < 60) { [r, g, b] = [c, x, 0]; } 
+    else if (h >= 60 && h < 120) { [r, g, b] = [x, c, 0]; } 
+    else if (h >= 120 && h < 180) { [r, g, b] = [0, c, x]; } 
+    else if (h >= 180 && h < 240) { [r, g, b] = [0, x, c]; } 
+    else if (h >= 240 && h < 300) { [r, g, b] = [x, 0, c]; } 
+    else if (h >= 300 && h < 360) { [r, g, b] = [c, 0, x]; }
+
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return [r, g, b];
+};
+
 
 type Uniforms = {
   [key: string]: {
@@ -62,7 +94,7 @@ export const CanvasRevealEffect = ({
         />
       </div>
       {showGradient && (
-         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
       )}
     </div>
   );
@@ -224,87 +256,6 @@ const Shader: React.FC<ShaderProps> = ({ source, uniforms, maxFps = 60 }) => (
   </Canvas>
 );
 
-function MiniNavbar({ isSignUp, setIsSignUp, loadDemoData, onLogoTripleClick }: { isSignUp: boolean, setIsSignUp: (isSignUp: boolean) => void; loadDemoData: () => void; onLogoTripleClick: () => void; }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const headerShapeClass = isOpen ? 'rounded-xl' : 'rounded-full';
-  
-  const [logoClickCount, setLogoClickCount] = useState(0);
-  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const handleLogoClick = () => {
-    if (logoClickTimer.current) {
-      clearTimeout(logoClickTimer.current);
-    }
-    const newCount = logoClickCount + 1;
-    setLogoClickCount(newCount);
-    if (newCount === 3) {
-      onLogoTripleClick();
-      setLogoClickCount(0);
-    } else {
-      logoClickTimer.current = setTimeout(() => {
-        setLogoClickCount(0);
-      }, 500);
-    }
-  };
-  
-  useEffect(() => {
-    return () => {
-      if(logoClickTimer.current) clearTimeout(logoClickTimer.current);
-    }
-  }, []);
-
-  const PrimaryButton = ({ label, onClick }: { label: string, onClick: () => void }) => (
-    <div className="relative group w-full sm:w-auto">
-      <div className="absolute inset-0 -m-2 rounded-full hidden sm:block bg-gray-100 opacity-40 filter blur-lg pointer-events-none transition-all duration-300 ease-out group-hover:opacity-60 group-hover:blur-xl group-hover:-m-3"></div>
-      <button onClick={onClick} className="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-black bg-gradient-to-br from-gray-100 to-gray-300 rounded-full hover:from-gray-200 hover:to-gray-400 transition-all duration-200 w-full sm:w-auto">
-        {label}
-      </button>
-    </div>
-  );
-
-  const SecondaryButton = ({ label, onClick }: { label: string, onClick: () => void }) => (
-    <button onClick={onClick} className="px-4 py-2 sm:px-3 text-xs sm:text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white/50 hover:text-white transition-colors duration-200 w-full sm:w-auto">
-      {label}
-    </button>
-  );
-
-  const demoButtonElement = (
-    <button onClick={loadDemoData} className="px-4 py-2 sm:px-3 text-xs sm:text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white/50 hover:text-white transition-colors duration-200 w-full sm:w-auto">
-        View Demo
-    </button>
-  );
-
-  return (
-    <header className={cn(`fixed top-6 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center pl-6 pr-6 py-3 backdrop-blur-sm border border-[#333] bg-[#1f1f1f57] w-[calc(100%-2rem)] sm:w-auto transition-[border-radius] duration-300 ease-in-out`, headerShapeClass)}>
-      <div className="flex items-center justify-between w-full gap-x-6 sm:gap-x-8">
-        <div className="flex items-center cursor-pointer" onClick={handleLogoClick} title="Triple-click for info">
-            <div className="relative w-5 h-5 flex items-center justify-center">
-                <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 top-0 left-1/2 transform -translate-x-1/2 opacity-80"></span>
-                <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 left-0 top-1/2 transform -translate-y-1/2 opacity-80"></span>
-                <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 right-0 top-1/2 transform -translate-y-1/2 opacity-80"></span>
-                <span className="absolute w-1.5 h-1.5 rounded-full bg-gray-200 bottom-0 left-1/2 transform -translate-x-1/2 opacity-80"></span>
-            </div>
-        </div>
-        <div className="hidden sm:flex items-center gap-2 sm:gap-3">
-          {!isSignUp ? <PrimaryButton label="Log In" onClick={() => setIsSignUp(false)} /> : <SecondaryButton label="Log In" onClick={() => setIsSignUp(false)} />}
-          {isSignUp ? <PrimaryButton label="Sign Up" onClick={() => setIsSignUp(true)} /> : <SecondaryButton label="Sign Up" onClick={() => setIsSignUp(true)} />}
-          {demoButtonElement}
-        </div>
-        <button className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-300 focus:outline-none" onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close Menu' : 'Open Menu'}>
-          {isOpen ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>}
-        </button>
-      </div>
-      <div className={cn("sm:hidden flex flex-col items-center w-full transition-all ease-in-out duration-300 overflow-hidden", isOpen ? 'max-h-[1000px] opacity-100 pt-4' : 'max-h-0 opacity-0 pt-0 pointer-events-none')}>
-        <div className="flex flex-col items-center space-y-4 mt-4 w-full">
-          {!isSignUp ? <PrimaryButton label="Log In" onClick={() => {setIsSignUp(false); setIsOpen(false)}} /> : <SecondaryButton label="Log In" onClick={() => {setIsSignUp(false); setIsOpen(false);}} />}
-          {isSignUp ? <PrimaryButton label="Sign Up" onClick={() => {setIsSignUp(true); setIsOpen(false);}} /> : <SecondaryButton label="Sign Up" onClick={() => {setIsSignUp(true); setIsOpen(false);}} />}
-          {demoButtonElement}
-        </div>
-      </div>
-    </header>
-  );
-}
-
 // --- END OF 3D & ANIMATION COMPONENTS ---
 
 const LoginPage: React.FC = () => {
@@ -322,7 +273,32 @@ const LoginPage: React.FC = () => {
   const [passcodeError, setPasscodeError] = useState('');
   const [isNerdModalOpen, setIsNerdModalOpen] = useState(false);
   const [activeNerdTab, setActiveNerdTab] = useState<'nerds' | 'changelog'>('nerds');
+  
+  const [logoClickCount, setLogoClickCount] = useState(0);
+  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [matrixColors, setMatrixColors] = useState<number[][]>([[49, 49, 51], [60, 94, 184]]);
+
+  useEffect(() => {
+    // This effect runs after the AppContent has applied the theme variables to the root element.
+    // A small delay ensures that getComputedStyle reads the final, correct values.
+    const timer = setTimeout(() => {
+        try {
+            const primaryColorHsl = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+            const outlineColorHsl = getComputedStyle(document.documentElement).getPropertyValue('--outline-variant').trim();
+            
+            if (primaryColorHsl && outlineColorHsl) {
+                const primaryRgb = hslStringToRgb(primaryColorHsl);
+                const outlineRgb = hslStringToRgb(outlineColorHsl);
+                setMatrixColors([outlineRgb, primaryRgb]);
+            }
+        } catch (error) {
+            console.error("Could not parse theme colors for matrix background, using defaults.", error);
+        }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (step === "code") {
@@ -330,7 +306,6 @@ const LoginPage: React.FC = () => {
     }
   }, [step]);
   
-  // Reset form when switching between Log In and Sign Up
   useEffect(() => {
     setName('');
     setEmail('');
@@ -391,87 +366,129 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleLogoTripleClick = () => {
-    setActiveNerdTab('nerds'); // Reset to default tab
-    setIsNerdModalOpen(true);
+  const handleLogoClick = () => {
+    if (logoClickTimer.current) {
+      clearTimeout(logoClickTimer.current);
+    }
+    const newCount = logoClickCount + 1;
+    setLogoClickCount(newCount);
+    if (newCount === 3) {
+      setActiveNerdTab('nerds');
+      setIsNerdModalOpen(true);
+      setLogoClickCount(0);
+    } else {
+      logoClickTimer.current = setTimeout(() => {
+        setLogoClickCount(0);
+      }, 500);
+    }
   };
+  
+  useEffect(() => {
+    return () => {
+      if(logoClickTimer.current) clearTimeout(logoClickTimer.current);
+    }
+  }, []);
 
   return (
-    <div className="flex w-full flex-col min-h-screen bg-black relative">
+    <div className="flex w-full flex-col min-h-screen bg-black relative font-sans text-white">
       <div className="absolute inset-0 z-0">
-        {initialCanvasVisible && <CanvasRevealEffect animationSpeed={3} containerClassName="bg-black" colors={[[255, 255, 255], [255, 255, 255]]} dotSize={6} reverse={false} />}
-        {reverseCanvasVisible && <CanvasRevealEffect animationSpeed={4} containerClassName="bg-black" colors={[[255, 255, 255], [255, 255, 255]]} dotSize={6} reverse={true} />}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,1)_0%,_transparent_100%)]" />
-        <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-black to-transparent" />
+        {initialCanvasVisible && <CanvasRevealEffect animationSpeed={3} containerClassName="bg-black" colors={matrixColors} dotSize={2} />}
+        {reverseCanvasVisible && <CanvasRevealEffect animationSpeed={4} containerClassName="bg-black" colors={matrixColors} dotSize={2} reverse={true} />}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.2)_0%,_rgba(0,0,0,1)_80%)]" />
       </div>
       
-      <div className="relative z-10 flex flex-col flex-1">
-        <MiniNavbar isSignUp={isSignUp} setIsSignUp={setIsSignUp} loadDemoData={loadDemoData} onLogoTripleClick={handleLogoTripleClick} />
-        <main className="flex flex-1 flex-col justify-center items-center pt-24 pb-8">
-            <div className="w-full max-w-sm px-4">
-              <AnimatePresence mode="wait">
-                {step === "email" ? (
-                  <motion.div key="email-step" initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.4, ease: "easeOut" }} className="space-y-6 text-center">
-                    <div className="space-y-1">
-                      <h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-tight text-white">{isSignUp ? "Create an Account" : "Welcome Back"}</h1>
-                      <p className="text-[1.8rem] text-white/70 font-light">{isSignUp ? "Get started with My Place" : "Sign in to continue"}</p>
+      <div className="relative z-10 flex flex-col flex-1 items-center justify-center p-4">
+        <AnimatePresence mode="wait">
+          {step === "email" ? (
+            <motion.div 
+              key="email-step" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }} 
+              transition={{ duration: 0.4, ease: "easeOut" }} 
+              className="w-full max-w-md"
+            >
+              <div className="bg-black/40 border border-white/10 rounded-xl p-8 backdrop-blur-sm">
+                <div className="text-center mb-8">
+                    <div onClick={handleLogoClick} className="inline-block cursor-pointer" title="Psst... triple-click me">
+                      <Logo textClassName="text-4xl" />
                     </div>
-                    <div className="space-y-4">
-                      <button onClick={() => { setPasscodeError(''); setIsPasscodeModalOpen(true); }} className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors">
-                        <GoogleIcon className="w-5 h-5"/>
-                        <span>Sign in with Google</span>
+                    <h1 className="text-xl mt-3 text-white/80">Your personal productivity dashboard.</h1>
+                </div>
+
+                <h2 className="text-xl font-semibold text-center mb-1">{isSignUp ? "Create an Account" : "Welcome Back"}</h2>
+                <p className="text-white/60 mb-6 text-center">
+                  {isSignUp ? "Already have an account?" : "Don't have an account?"}{' '}
+                  <button onClick={() => setIsSignUp(!isSignUp)} className="font-semibold text-primary hover:text-white transition-colors">
+                      {isSignUp ? "Log In" : "Sign Up"}
+                  </button>
+                </p>
+                
+                <div className="space-y-4">
+                  <button onClick={() => { setPasscodeError(''); setIsPasscodeModalOpen(true); }} className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg py-3 px-4 transition-colors">
+                      <GoogleIcon className="w-5 h-5"/>
+                      <span>Sign in with Google</span>
+                  </button>
+                  <div className="flex items-center gap-4"><div className="h-px bg-white/10 flex-1" /><span className="text-white/40 text-sm">or</span><div className="h-px bg-white/10 flex-1" /></div>
+                  
+                  <form onSubmit={handleFormSubmit} className="space-y-4">
+                      {isSignUp && (
+                          <input type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-white/5 text-white border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary/50" required />
+                      )}
+                      <input type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-white/5 text-white border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary/50" required/>
+                      <button type="submit" className="w-full bg-primary hover:opacity-90 text-on-primary font-semibold rounded-lg py-3 transition-opacity">
+                          Continue with Email
                       </button>
-                      <div className="flex items-center gap-4"><div className="h-px bg-white/10 flex-1" /><span className="text-white/40 text-sm">or</span><div className="h-px bg-white/10 flex-1" /></div>
-                      <form onSubmit={handleFormSubmit} className="space-y-4">
-                        {isSignUp && (
-                            <input type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full backdrop-blur-[1px] text-white border-1 border-white/10 rounded-full py-3 px-4 focus:outline-none focus:border focus:border-white/30 text-center" required />
-                        )}
-                        <div className="relative">
-                          <input type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full backdrop-blur-[1px] text-white border-1 border-white/10 rounded-full py-3 px-4 focus:outline-none focus:border focus:border-white/30 text-center" required/>
-                          <button type="submit" className="absolute right-1.5 top-1.5 text-white w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors group overflow-hidden">
-                            <span className="relative w-full h-full block overflow-hidden"><span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full">→</span><span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full group-hover:translate-x-0">→</span></span>
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                    <p className="text-xs text-white/40 pt-10">By continuing, you agree to our <a href="#" className="underline hover:text-white/60">Terms of Service</a> and <a href="#" className="underline hover:text-white/60">Privacy Policy</a>.</p>
-                  </motion.div>
-                ) : step === "code" ? (
-                  <motion.div key="code-step" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 100 }} transition={{ duration: 0.4, ease: "easeOut" }} className="space-y-6 text-center">
-                    <div className="space-y-1"><h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-tight text-white">We sent you a code</h1><p className="text-[1.25rem] text-white/50 font-light">Please enter it below</p></div>
-                    <div className="relative rounded-full py-4 px-5 border border-white/10 bg-transparent"><div className="flex items-center justify-center">
-                        {code.map((digit, i) => (
-                            <div key={i} className="flex items-center">
-                                <div className="relative">
-                                    <input ref={(el) => { codeInputRefs.current[i] = el; }} type="text" inputMode="numeric" pattern="[0-9]*" maxLength={1} value={digit} onChange={e => handleCodeChange(i, e.target.value)} onKeyDown={e => handleKeyDown(i, e)} className="w-8 text-center text-xl bg-transparent text-white border-none focus:outline-none focus:ring-0 appearance-none" style={{ caretColor: 'transparent' }}/>
-                                    {!digit && <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none"><span className="text-xl text-white opacity-20">0</span></div>}
-                                </div>
-                                {i < 5 && <span className="text-white/20 text-xl">|</span>}
-                            </div>
-                        ))}
-                    </div></div>
-                    <div><motion.p className="text-white/50 hover:text-white/70 transition-colors cursor-pointer text-sm" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>Resend code</motion.p></div>
-                    <div className="flex w-full gap-3">
-                      <motion.button onClick={handleBackClick} className="rounded-full bg-white/10 text-white font-medium px-8 py-3 hover:bg-white/20 transition-colors w-[30%]" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>Back</motion.button>
-                      <motion.button disabled className="flex-1 rounded-full font-medium py-3 border transition-all duration-300 bg-[#111] text-white/50 border-white/10 cursor-not-allowed">Continue</motion.button>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div key="success-step" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }} className="space-y-6 text-center">
-                    <div className="space-y-1"><h1 className="text-[2.5rem] font-bold leading-[1.1] tracking-tight text-white">You're in!</h1><p className="text-[1.25rem] text-white/50 font-light">Welcome to My Place</p></div>
-                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="py-10">
-                      <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-white to-white/70 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                      </div>
-                    </motion.div>
-                    <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="w-full rounded-full bg-white text-black font-medium py-3 hover:bg-white/90 transition-colors">
-                      Continue to Dashboard
-                    </motion.button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-        </main>
+                  </form>
+                </div>
+              </div>
+
+              <div className="mt-8 text-center">
+                  <p className="text-white/60 text-sm">
+                      Just exploring?{' '}
+                      <button onClick={loadDemoData} className="font-semibold text-primary hover:text-white transition-colors underline">
+                          View the Demo
+                      </button>
+                  </p>
+                  <p className="text-xs text-white/40 mt-6">By continuing, you agree to our <a href="#" className="underline hover:text-white/60">Terms of Service</a> and <a href="#" className="underline hover:text-white/60">Privacy Policy</a>.</p>
+              </div>
+
+            </motion.div>
+          ) : step === "code" ? (
+            <motion.div key="code-step" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 100 }} transition={{ duration: 0.4, ease: "easeOut" }} className="space-y-6 text-center max-w-md w-full">
+              <div className="space-y-1"><h1 className="text-3xl font-bold tracking-tight text-white">We sent you a code</h1><p className="text-lg text-white/70">Please enter it below</p></div>
+              <div className="flex items-center justify-center gap-2">
+                  {code.map((digit, i) => (
+                      <input 
+                        key={i}
+                        ref={(el) => { codeInputRefs.current[i] = el; }} 
+                        type="text" 
+                        inputMode="numeric" 
+                        pattern="[0-9]*" 
+                        maxLength={1} 
+                        value={digit} 
+                        onChange={e => handleCodeChange(i, e.target.value)} 
+                        onKeyDown={e => handleKeyDown(i, e)} 
+                        className="w-12 h-14 text-center text-2xl bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                      />
+                  ))}
+              </div>
+              <div><button className="text-white/50 hover:text-white/70 transition-colors text-sm">Resend code</button></div>
+              <div className="flex w-full gap-3 pt-4">
+                <button onClick={handleBackClick} className="flex-1 rounded-lg bg-white/10 text-white font-medium px-8 py-3 hover:bg-white/20 transition-colors">Back</button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div key="success-step" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }} className="space-y-6 text-center">
+              <div className="space-y-1"><h1 className="text-3xl font-bold tracking-tight text-white">You're in!</h1><p className="text-lg text-white/70">Welcome to My Place</p></div>
+              <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="py-10">
+                <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-white to-white/70 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       <Modal 
@@ -522,13 +539,13 @@ const LoginPage: React.FC = () => {
         <div className="flex border-b border-border mb-4">
             <button 
                 onClick={() => setActiveNerdTab('nerds')}
-                className={`px-4 py-2 font-semibold transition-colors ${activeNerdTab === 'nerds' ? 'text-accent border-b-2 border-accent' : 'text-muted-foreground hover:bg-muted/50'}`}
+                className={`px-4 py-2 font-semibold transition-colors ${activeNerdTab === 'nerds' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:bg-muted/50'}`}
             >
                 Tech Stack
             </button>
             <button 
                 onClick={() => setActiveNerdTab('changelog')}
-                className={`px-4 py-2 font-semibold transition-colors ${activeNerdTab === 'changelog' ? 'text-accent border-b-2 border-accent' : 'text-muted-foreground hover:bg-muted/50'}`}
+                className={`px-4 py-2 font-semibold transition-colors ${activeNerdTab === 'changelog' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:bg-muted/50'}`}
             >
                 Changelog
             </button>
@@ -538,7 +555,7 @@ const LoginPage: React.FC = () => {
                 <h4>Core Framework</h4>
                 <ul>
                     <li>React 18 & TypeScript</li>
-                    <li>Live-reloading via Vite dev server</li>
+                    <li>Vite dev server for HMR</li>
                 </ul>
                 <h4>Styling & Animation</h4>
                 <ul>
@@ -557,8 +574,16 @@ const LoginPage: React.FC = () => {
         ) : (
             <div className="space-y-4 text-popover-foreground">
                 <div>
-                    <h4 className="font-semibold">v1.3.0 <span className="text-xs text-muted-foreground ml-2">Latest</span></h4>
-                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">Upgraded the login experience with dynamic UI and a secret nerd modal. 😉</p>
+                    <h4 className="font-semibold">v1.5.0 <span className="text-xs text-muted-foreground ml-2">Latest</span></h4>
+                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">Simplified the login screen into a single, focused card for a more modern and streamlined experience on all devices.</p>
+                </div>
+                <div>
+                    <h4 className="font-semibold">v1.4.0</h4>
+                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">Redesigned login screen for a more focused, modern, and intuitive user experience.</p>
+                </div>
+                <div>
+                    <h4 className="font-semibold">v1.3.0</h4>
+                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">Upgraded the previous login experience with dynamic UI and a secret nerd modal. 😉</p>
                 </div>
                 <div>
                     <h4 className="font-semibold">v1.2.0</h4>
@@ -566,7 +591,7 @@ const LoginPage: React.FC = () => {
                 </div>
                 <div>
                     <h4 className="font-semibold">v1.1.0</h4>
-                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">AI features powered by Gemini are now live! Summarize notes, schedule tasks, and more.</p>
+                    <p className="text-sm text-muted-foreground pl-4 border-l-2 border-border ml-2 py-1">AI features powered by Gemini are now live!</p>
                 </div>
                 <div>
                     <h4 className="font-semibold">v1.0.0</h4>

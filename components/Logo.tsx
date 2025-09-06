@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const LogoIcon = ({ className }: { className?: string }) => (
@@ -7,13 +8,13 @@ const LogoIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-const Logo = () => {
+const Logo = ({ textClassName }: { textClassName?: string }) => {
     return (
         <div className="flex items-center">
             <div className="w-10 h-10">
                 <LogoIcon className="w-full h-full" />
             </div>
-            <span className="ml-3 text-2xl font-bold text-foreground">My Place</span>
+            <span className={`ml-3 font-bold text-foreground ${textClassName || 'text-2xl'}`}>My Place</span>
         </div>
     );
 };
